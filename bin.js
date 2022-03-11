@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const main = require('./src/index')
 
 main(...process.argv.slice(2)).catch((err) => {
