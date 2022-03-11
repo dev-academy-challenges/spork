@@ -23,6 +23,7 @@ sosij expects `GITHUB_USER` and `GITHUB_ACCESS_TOKEN` to be in the environment,
 it will load variables from `~/.sosij/env`.
 
 ```sh
+$ npm install -g https://github.com/dev-academy-challenges/sosij.git
 $ sosij --init
 $ code ~/.sosij/env
 ```
