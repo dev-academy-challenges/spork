@@ -52,3 +52,11 @@ code in `src/infra.js` is lower priority (and more difficult) to test
 Pure code that makes sense in isolation, should be unit tested
 
 ## Coverage
+
+Jest reports test coverage. Currently we hit about 50% of branches.
+
+I would like to see fuller coverage of `src/main.js` making meaningful assertions
+about how we react to user interactions especially around documented behaviour
+
+Elsewhere, I'm not especially concerned about coverage on infra files, like
+`src/github.js`
