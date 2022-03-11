@@ -1,15 +1,30 @@
+const readArgs = require('./read-args')
+const formatDate = require('./format-date')
+const usage = require('./usage')
+
 const PROGRAM_NAME = 'sosij'
 
 const main =
   (...args) =>
   async (eff) => {
+    const { flags } = readArgs(args)
+    if (flags.help) {
+      eff.writeStdout(usage)
+      return
+    }
+
+    if (flags.version) {
+      eff.writeStdout(`${PROGRAM_NAME} v${eff.version()}\n`)
+      return
+    }
+
     eff.writeStdout(`${PROGRAM_NAME} running...\n`)
 
-    const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = eff.env()
     const SOSIJ_DIRECTORY = eff.resolvePath(
       eff.env().SOSIJ_DIRECTORY || `${eff.env().HOME}/.sosij`
     )
 
+    const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = eff.env()
     if (!GITHUB_USER) {
       throw new Error('Environment Variable GITHUB_USER is undefined')
     }
@@ -33,21 +48,18 @@ const main =
       await eff.spawn(MONOREPO_PATH, 'git', ['pull'])
     }
 
-    const { flags, positional } = readArgs(args)
-    const [cohort, challenge] = positional
-    const today = new Date()
-    const tomorrow = new Date(+today + 24 * 60 * 60 * 1000)
+    eff.writeStdout(`schedule = ${flags.schedule}\n`)
 
+    const today = eff.newDate()
+    const tomorrow = eff.newDate(+today + 24 * 60 * 60 * 1000)
     const targetDate =
       flags.date === 'today' || flags.date == null
         ? today
         : flags.date === 'tomorrow'
         ? tomorrow
-        : new Date(flags.date)
+        : eff.newDate(flags.date)
 
     eff.writeStdout(`targetDate is ${formatDate(targetDate)}\n`)
-    eff.writeStdout(`cohort = ${cohort}, challenge = ${challenge}\n`)
-    eff.writeStdout(`schedule = ${flags.schedule}\n`)
 
     if (!flags.schedule) {
       eff.writeStdout(`No schedule means nothing to do`)
@@ -63,45 +75,5 @@ const main =
 
     await eff.run(cfg, schedule)
   }
-
-const readArgs = (arr) => {
-  let i = 0
-  const positional = []
-  const flags = {}
-
-  while (i < arr.length) {
-    const chunk = arr[i++]
-    console.log(chunk)
-
-    switch (chunk) {
-      case '-s':
-      case '--schedule':
-        flags.schedule = arr[i++]
-        break
-
-      case '-d':
-      case '--for-date':
-        flags.date = arr[i++]
-        break
-
-      default:
-        if (chunk.startsWith('-')) {
-          throw new Error(`Unknown flag: ${chunk}`)
-        }
-
-        positional.push(chunk)
-    }
-  }
-
-  return { flags, positional }
-}
-
-const formatDate = (targetDate) => {
-  const pad = (s) => (`${s}`.length === 2 ? `${s}` : `0${s}`)
-
-  return `${targetDate.getFullYear()}-${pad(
-    targetDate.getMonth() + 1
-  )}-${targetDate.getDate()}`
-}
 
 module.exports = main

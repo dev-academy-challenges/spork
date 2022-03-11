@@ -3,6 +3,7 @@ const FS = require('fs').promises
 const Path = require('path/posix')
 const { existsSync: fsExists } = require('fs')
 const { run } = require('./runner')
+const { version } = require('../package.json')
 
 module.exports = {
   writeStdout: (str) => process.stdout.write(str),
@@ -15,4 +16,6 @@ module.exports = {
   resolvePath: (...args) => Path.resolve(...args),
   require: (path) => require(path),
   run: (...args) => run(...args),
+  newDate: (...args) => new Date(...args),
+  version: () => version,
 }

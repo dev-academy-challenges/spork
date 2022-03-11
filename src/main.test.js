@@ -12,6 +12,8 @@ const fakeInfra = () => ({
   resolvePath: (...args) => Path.join(...args),
   require: jest.fn(() => () => {}),
   run: () => {},
+  newDate: (...args) =>
+    args.length === 0 ? new Date(448502400000) : new Date(...args),
 })
 
 describe('main', () => {
