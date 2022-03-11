@@ -9,12 +9,16 @@ const fakeInfra = () => ({
   cwd: () => '/cwd',
   fsExists: () => false,
   fsMkDir: jest.fn(async () => null),
+  fsWrite: jest.fn(async () => null),
+  fsReadFile: jest.fn(async () => Buffer.from('')),
   joinPath: (...args) => Path.join(...args),
   resolvePath: (...args) => Path.join(...args),
   require: jest.fn(() => () => {}),
   run: () => {},
   newDate: (...args) =>
     args.length === 0 ? new Date(448502400000) : new Date(...args),
+  version: () => '1.0.0',
+  createRepo: jest.fn(async () => null),
 })
 
 describe('main', () => {
@@ -69,7 +73,7 @@ describe('main', () => {
 
     await main()(infra)
 
-    expect(infra.fsMkDir).toBeCalledWith('~/.${APP_NAME}')
+    expect(infra.fsMkDir).toBeCalledWith(`~/.${APP_NAME}`)
   })
 
   it(`doesn't create a home directory if one exists`, async () => {
@@ -106,9 +110,11 @@ describe('main', () => {
 
     await main()(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(`Monorepo exists, updating\n`)
+    expect(infra.writeStdout).toBeCalledWith(
+      expect.stringMatching(/Monorepo exists at (.*) updating\n/)
+    )
 
-    expect(infra.spawn).toBeCalledWith('~/.${APP_NAME}/monorepo-trial', 'git', [
+    expect(infra.spawn).toBeCalledWith(`~/.${APP_NAME}/monorepo-trial`, 'git', [
       'pull',
     ])
   })
