@@ -20,6 +20,10 @@ const readArgs = (arr) => {
         flags.init = true
         break
 
+      case '--dry-run':
+        flags.dryRun = true
+        break
+
       case '-s':
       case '--schedule':
         flags.schedule = arr[i++]

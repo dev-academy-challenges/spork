@@ -24,5 +24,8 @@
   "prettier": {
     "semi": false,
     "singleQuote": true
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
   }
 }
