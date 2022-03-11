@@ -1,5 +1,9 @@
 # Contributing to sosij
 
+## Please suggest a better name
+
+Sosij doesn't have any special meaning, I'm just not great at naming things
+
 ## Features are expensive
 
 Please raise an issue first if you think you want to add a feature.
