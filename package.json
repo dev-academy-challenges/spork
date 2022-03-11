@@ -1,0 +1,28 @@
+{
+  "name": "sosij",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "sosij": "bin.js"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.10.0",
+    "eslint-config-eda": "^1.0.0",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1"
+  },
+  "eslintConfig": {
+    "extends": "eda/core"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}
