@@ -59,7 +59,9 @@ If you want to see what would be deployed, but not actually run deployment use t
 
 ### Generating a schedule
 
-This is a place to start but is missing some of the campus specific challenges
+This is a place to start but is missing some of the campus specific challenges.
+
+Valid values for campus are `welly`, `akl` and `online`
 
 ```sh
 $ sosij --generate-schedule \
