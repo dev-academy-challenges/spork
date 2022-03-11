@@ -12,8 +12,46 @@
                           888P"
 ```
 
-`sosij` is a cli tool to push challenges into cohort orgs on a schedule
+`sosij` is an experimental cli tool to push challenges into cohort orgs on a schedule
+
+### Quickstart Guide
+
+sosij creates a directory at `~/.sosij` (this is configurable), so this is the
+fastest way to get set up
 
 ```sh
-sosij --usage
+$ export GITHUB_USER=whatever
+$ export GITHUB_ACCESS_TOKEN=gh_token
+$ sosij --init
+$ code ~/.sosij/env
 ```
+
+### Running a schedule
+
+sosij will look for `~/.sosij/schedule.js` unless you pass `-s path/to/schedule.js` or `--schedule path/to/schedule.js`
+
+You need to pass a date in `--for-date=YYYY-MM-DD` format, and it will deploy challenges intended for exactly that day
+
+We also support `--for-date=today` and `--for-date=tomorrow`.
+
+A schedule should look like this:
+
+```javascript
+module.exports = (on) => {
+  on('2022-04-14')
+    .deploy('two-truths-and-a-lie', 'objects-and-arrays-kata')
+    .to('piwakawaka-2022')
+
+  on('2022-03-15')
+    .deploy(
+      'kata-types-modules',
+      'kata-strings-numbers-modules',
+      'exercise-arrays',
+      'object-array-practice',
+      'kata-number-patterns'
+    )
+    .to('piwakawaka-2022')
+}
+```
+
+If you want to see what would be deployed, but not actually run deployment use the `--dry-run` flag

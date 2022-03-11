@@ -1,5 +1,5 @@
-module.exports = `#!/usr/bin/env bash
+module.exports = (user, token) => `#!/usr/bin/env bash
 
-# GITHUB_USER=
-# GITHUB_ACCESS_TOKEN=
+# GITHUB_USER=${user}
+# GITHUB_ACCESS_TOKEN=${token}
 `

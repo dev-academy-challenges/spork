@@ -34,7 +34,10 @@ const main =
 
     if (!eff.fsExists(SOSIJ_DIRECTORY)) {
       await eff.fsMkDir(SOSIJ_DIRECTORY)
-      await eff.fsWrite(envPath, exampleEnv)
+      await eff.fsWrite(
+        envPath,
+        exampleEnv(env.GITHUB_USER || '', env.GITHUB_ACCESS_TOKEN || '')
+      )
     }
 
     // load ~/.sosij/env
@@ -62,6 +65,11 @@ const main =
     } else {
       eff.writeStdout(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
       await eff.spawn(MONOREPO_PATH, 'git', ['pull'])
+    }
+
+    if (flags.init) {
+      eff.writeStdout(`called with --init so we're all done here\n`)
+      return
     }
 
     const today = eff.newDate()
