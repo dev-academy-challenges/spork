@@ -24,6 +24,26 @@ const readArgs = (arr) => {
         flags.dryRun = true
         break
 
+      case '--create-schedule':
+        flags.createSchedule = true
+        break
+
+      case '--campus':
+        flags.campus = arr[i++]
+        break
+
+      case '--start-date':
+        flags.startDate = arr[i++]
+        break
+
+      case '--cohort-org':
+        flags.cohortOrg = arr[i++]
+        break
+
+      case '--overwrite':
+        flags.overwrite = true
+        break
+
       case '-s':
       case '--schedule':
         flags.schedule = arr[i++]

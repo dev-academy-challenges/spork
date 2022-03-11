@@ -1,11 +1,12 @@
+const dotenv = require('dotenv')
+
 const readArgs = require('./read-args')
 const formatDate = require('./format-date')
 const usage = require('./usage')
 const exampleEnv = require('./example-env')
 const runner = require('./runner')
-const dotenv = require('dotenv')
-
-const PROGRAM_NAME = 'sosij'
+const createSchedule = require('./schedules/index')
+const PROGRAM_NAME = require('./app-name')
 
 const main =
   (...args) =>
@@ -27,8 +28,9 @@ const main =
     eff.writeStdout(`${PROGRAM_NAME} running...\n`)
 
     const SOSIJ_DIRECTORY = eff.resolvePath(
-      env.SOSIJ_DIRECTORY || `${env.HOME}/.sosij`
+      env.SOSIJ_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`
     )
+    const DEFAULT_SCHEDULE = eff.joinPath(SOSIJ_DIRECTORY, 'schedule.js')
 
     const envPath = eff.joinPath(SOSIJ_DIRECTORY, 'env')
 
@@ -40,12 +42,55 @@ const main =
       )
     }
 
+    if (flags.init) {
+      eff.writeStdout(`called with --init so we're all done here\n`)
+      return
+    }
+
     // load ~/.sosij/env
     if (eff.fsExists(envPath)) {
-      eff.writeStdout(`"${envPath}" exists, loading vars\n`)
+      eff.writeStdout(`"${envPath}" exists, loading vars\n\n`)
       const bytes = await eff.fsReadFile(envPath, 'utf8')
       const cfg = dotenv.parse(bytes)
       env = { ...cfg, ...env }
+    }
+
+    if (flags.createSchedule) {
+      if (!(flags.campus && flags.startDate && flags.cohortOrg)) {
+        eff.writeStdout(`required flags for create-schedule missing:
+--campus welly | akl | online
+--start-date YYYY-MM-DD
+--cohort-org org-name\n`)
+        throw new Error('required flags missing')
+      }
+
+      if (!['welly', 'akl', 'online'].includes(flags.campus)) {
+        throw new Error(
+          `Invalid campus: ${flags.campus} must be one of welly, akl, online`
+        )
+      }
+
+      if (isNaN(+eff.newDate(flags.startDate))) {
+        throw new Error(`Invalid start-date: ${flags.startDate}`)
+      }
+
+      const schedulePath = eff.resolvePath(flags.schedule || DEFAULT_SCHEDULE)
+      const scheduleJs = createSchedule(
+        eff.newDate(flags.startDate),
+        flags.campus,
+        flags.cohortOrg
+      )
+
+      if (eff.fsExists(schedulePath) && !flags.overwrite) {
+        eff.writeStdout(
+          `File exists at ${schedulePath}, not overwriting without the --overwrite flag\n`
+        )
+        return
+      }
+
+      await eff.fsWrite(schedulePath, scheduleJs, 'utf8')
+      eff.writeStdout(`Wrote new schedule to ${schedulePath}\n`)
+      return
     }
 
     const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = env
@@ -67,11 +112,6 @@ const main =
       await eff.spawn(MONOREPO_PATH, 'git', ['pull'])
     }
 
-    if (flags.init) {
-      eff.writeStdout(`called with --init so we're all done here\n`)
-      return
-    }
-
     const today = eff.newDate()
     const tomorrow = eff.newDate(+today + 24 * 60 * 60 * 1000)
     const targetDate =
@@ -81,7 +121,6 @@ const main =
         ? tomorrow
         : eff.newDate(flags.date)
 
-    const DEFAULT_SCHEDULE = eff.joinPath(SOSIJ_DIRECTORY, 'schedule.js')
     if (!flags.schedule && !eff.fsExists(DEFAULT_SCHEDULE)) {
       eff.writeStdout(`No schedule means nothing to do\n`)
       return

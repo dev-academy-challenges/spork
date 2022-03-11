@@ -17,11 +17,12 @@
 ### Quickstart Guide
 
 sosij creates a directory at `~/.sosij` (this is configurable), so this is the
-fastest way to get set up
+fastest way to get set up.
+
+sosij expects `GITHUB_USER` and `GITHUB_ACCESS_TOKEN` to be in the environment,
+it will load variables from `~/.sosij/env`.
 
 ```sh
-$ export GITHUB_USER=whatever
-$ export GITHUB_ACCESS_TOKEN=gh_token
 $ sosij --init
 $ code ~/.sosij/env
 ```
@@ -55,3 +56,15 @@ module.exports = (on) => {
 ```
 
 If you want to see what would be deployed, but not actually run deployment use the `--dry-run` flag
+
+### Generating a schedule
+
+This is a place to start but is missing some of the campus specific challenges
+
+```sh
+$ sosij --generate-schedule \
+  --cohort-org piwakawaka-2022 \
+  --start-date 2022-03-14 \
+  --campus welly \
+  --schedule ~/welly-term2-schedule.js
+```

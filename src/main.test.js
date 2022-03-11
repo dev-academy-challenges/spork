@@ -1,5 +1,6 @@
 const main = require('./main')
 const Path = require('path/posix')
+const APP_NAME = require('./app-name')
 
 const fakeInfra = () => ({
   writeStdout: jest.fn(),
@@ -23,7 +24,7 @@ describe('main', () => {
     }
 
     await main()(infra)
-    expect(infra.writeStdout).toBeCalledWith(`sosij running...\n`)
+    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} running...\n`)
   })
 
   it('exits early if GITHUB_USER is missing', async () => {
@@ -68,7 +69,7 @@ describe('main', () => {
 
     await main()(infra)
 
-    expect(infra.fsMkDir).toBeCalledWith('~/.sosij')
+    expect(infra.fsMkDir).toBeCalledWith('~/.${APP_NAME}')
   })
 
   it(`doesn't create a home directory if one exists`, async () => {
@@ -79,7 +80,7 @@ describe('main', () => {
 
     await main()(infra)
 
-    expect(infra.fsMkDir).not.toBeCalledWith('~/.sosij')
+    expect(infra.fsMkDir).not.toBeCalledWith('~/.${APP_NAME}')
   })
 
   it(`clones the monorepo if the directory doesn't exist`, async () => {
@@ -107,7 +108,7 @@ describe('main', () => {
 
     expect(infra.writeStdout).toBeCalledWith(`Monorepo exists, updating\n`)
 
-    expect(infra.spawn).toBeCalledWith('~/.sosij/monorepo-trial', 'git', [
+    expect(infra.spawn).toBeCalledWith('~/.${APP_NAME}/monorepo-trial', 'git', [
       'pull',
     ])
   })
