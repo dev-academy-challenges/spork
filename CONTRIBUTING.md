@@ -45,22 +45,18 @@ to make boundaries explicit.
 
 ## Testing style
 
-For features we prefer an end-to-end test with faked infra (see
-`src/main.test.js`), i.e. a test that runs the `main` function from
-`src/main.js` with specific inputs and observes effects through the faked infra
+For features we prefer an end-to-end test with faked infra i.e. a test that runs
+the `main` function from `src/main.js` with specific inputs and observes effects
+through the faked infra.
+
+Our test files are arranged by workflows, not for which modules they exercise:
+
+- startup.test.js everything that happens when the app starts
+- running.test.js running schedules
+- creating-schedules.test.js creating schedule files
 
 This enables our tests to resemble the way our software is used (mostly).
 
 code in `src/infra.js` is lower priority (and more difficult) to test
 
 Pure code that makes sense in isolation, should be unit tested
-
-## Coverage
-
-Jest reports test coverage. Currently we hit about 50% of branches.
-
-I would like to see fuller coverage of `src/main.js` making meaningful assertions
-about how we react to user interactions especially around documented behaviour
-
-Elsewhere, I'm not especially concerned about coverage on infra files, like
-`src/github.js`
