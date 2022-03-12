@@ -6,7 +6,7 @@ const runner = (cfg, f) => async (eff) => {
       for (const repo of repos) {
         eff.writeStdout(`deploying ${repo} to ${cohort} \n`)
         if (!cfg.dryRun) {
-          await forkToCohort(cfg.repoPath, cohort, repo)(eff)
+          await forkToCohort(cfg.repoPath, cohort, repo, cfg.credentials)(eff)
         }
       }
     }

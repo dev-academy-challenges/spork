@@ -21,7 +21,7 @@ const fakeInfra = () => ({
   createRepo: jest.fn(async () => null),
 })
 
-describe('main', () => {
+describe('Startup', () => {
   it('logs startup message immediately', async () => {
     const infra = {
       ...fakeInfra(),
@@ -29,6 +29,30 @@ describe('main', () => {
 
     await main()(infra)
     expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} running...\n`)
+  })
+
+  it('exists early with --help', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    await main('--help')(infra)
+
+    expect(infra.writeStdout).toBeCalled()
+    expect(infra.spawn).not.toBeCalled()
+    expect(infra.createRepo).not.toBeCalled()
+  })
+
+  it('exits early with --version', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    await main('--version')(infra)
+
+    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.spawn).not.toBeCalled()
+    expect(infra.createRepo).not.toBeCalled()
   })
 
   it('exits early if GITHUB_USER is missing', async () => {
@@ -74,6 +98,10 @@ describe('main', () => {
     await main()(infra)
 
     expect(infra.fsMkDir).toBeCalledWith(`~/.${APP_NAME}`)
+    expect(infra.fsWrite).toBeCalledWith(
+      `~/.${APP_NAME}/env`,
+      expect.anything()
+    )
   })
 
   it(`doesn't create a home directory if one exists`, async () => {

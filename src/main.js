@@ -137,6 +137,7 @@ const main =
       date: formatDate(targetDate),
       dryRun: !!flags.dryRun,
       repoPath: MONOREPO_PATH,
+      credentials: { GITHUB_USER, GITHUB_ACCESS_TOKEN },
     }
 
     await runner(cfg, schedule)(eff)
