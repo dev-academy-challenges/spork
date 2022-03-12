@@ -1,9 +1,10 @@
-const { spawn } = require('./utils/child-process')
 const FS = require('fs').promises
 const { existsSync: fsExists } = require('fs')
+
+const { spawn } = require('./utils/child-process')
 const { run } = require('./runner')
 const { version } = require('../package.json')
-const { createRepo } = require('./github')
+const { createRepo } = require('./utils/github')
 
 module.exports = {
   writeStdout: (str) => process.stdout.write(str),
