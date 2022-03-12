@@ -18,5 +18,5 @@ module.exports = {
   run: (...args) => run(...args),
   newDate: (...args) => new Date(...args),
   version: () => version,
-  createRepo: (org, name) => createRepo(org, name, process.env),
+  createRepo: (org, name, env) => createRepo(org, name, env),
 }

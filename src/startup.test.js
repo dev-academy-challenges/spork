@@ -19,6 +19,21 @@ const fakeInfra = () => ({
 })
 
 describe('Startup', () => {
+  it('throws on invalid flags', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    let err
+    try {
+      await main('--invalid-flag')(infra)
+    } catch (e) {
+      err = e
+    }
+
+    expect(err).not.toBeUndefined()
+  })
+
   it('logs startup message immediately', async () => {
     const infra = {
       ...fakeInfra(),
@@ -40,12 +55,36 @@ describe('Startup', () => {
     expect(infra.createRepo).not.toBeCalled()
   })
 
+  it('exits early with -h', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    await main('-h')(infra)
+
+    expect(infra.writeStdout).toBeCalled()
+    expect(infra.spawn).not.toBeCalled()
+    expect(infra.createRepo).not.toBeCalled()
+  })
+
   it('exits early with --version', async () => {
     const infra = {
       ...fakeInfra(),
     }
 
     await main('--version')(infra)
+
+    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.spawn).not.toBeCalled()
+    expect(infra.createRepo).not.toBeCalled()
+  })
+
+  it('exits early with -v', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    await main('-v')(infra)
 
     expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
     expect(infra.spawn).not.toBeCalled()

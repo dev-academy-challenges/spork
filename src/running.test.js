@@ -48,10 +48,15 @@ describe('running schedules', () => {
     await main('-d', '2022-03-14')(infra)
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.createRepo).toBeCalledWith('my-cohort-org', 'todays-challenge')
+    expect(infra.createRepo).toBeCalledWith(
+      'my-cohort-org',
+      'todays-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
+    )
     expect(infra.createRepo).not.toBeCalledWith(
       'my-cohort-org',
-      'tomorrows-challenge'
+      'tomorrows-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
     )
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
@@ -110,11 +115,13 @@ describe('running schedules', () => {
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
     expect(infra.createRepo).toBeCalledWith(
       'my-cohort-org',
-      'birthday-challenge'
+      'birthday-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
     )
     expect(infra.createRepo).not.toBeCalledWith(
       'my-cohort-org',
-      'just-some-challenge'
+      'just-some-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
     )
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
@@ -147,11 +154,13 @@ describe('running schedules', () => {
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
     expect(infra.createRepo).not.toBeCalledWith(
       'my-cohort-org',
-      'birthday-challenge'
+      'birthday-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
     )
     expect(infra.createRepo).toBeCalledWith(
       'my-cohort-org',
-      'just-some-challenge'
+      'just-some-challenge',
+      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
     )
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
@@ -201,6 +210,12 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
         `https://peter:gh_peters_token@github.com/my-cohort-org/todays-challenge.git`,
         'main',
       ]
+    )
+
+    expect(infra.createRepo).toBeCalledWith(
+      'my-cohort-org',
+      'todays-challenge',
+      { GITHUB_USER: 'peter', GITHUB_ACCESS_TOKEN: 'gh_peters_token' }
     )
   })
 })

@@ -14,7 +14,7 @@ const main =
   async (eff) => {
     // we do this before anything else because --help and --version
     // both exit early
-    const { flags } = readArgs(args)
+    const flags = readArgs(args)
     if (flags.help) {
       eff.writeStdout(usage)
       return

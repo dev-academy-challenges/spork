@@ -1,6 +1,5 @@
 const readArgs = (arr) => {
   let i = 0
-  const positional = []
   const flags = {}
 
   while (i < arr.length) {
@@ -55,15 +54,11 @@ const readArgs = (arr) => {
         break
 
       default:
-        if (chunk.startsWith('-')) {
-          throw new Error(`Unknown flag: ${chunk}`)
-        }
-
-        positional.push(chunk)
+        throw new Error(`Unknown flag: ${chunk}`)
     }
   }
 
-  return { flags, positional }
+  return flags
 }
 
 module.exports = readArgs

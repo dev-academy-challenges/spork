@@ -9,7 +9,7 @@ const forkToCohort = (repoPath, cohort, challengeName, env) => async (eff) => {
   const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = env
   const url = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/${cohort}/${challengeName}.git`
 
-  await eff.createRepo(cohort, challengeName)
+  await eff.createRepo(cohort, challengeName, env)
 
   await eff.spawn(repoPath, `git`, [
     'subtree',
