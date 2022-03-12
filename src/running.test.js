@@ -67,6 +67,32 @@ describe('running schedules', () => {
     expect(schedule).toBeCalled()
   })
 
+  it('calls the schedule, in dry-run mode', async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: () => true, // the packages must exist in the monorepo
+      require: jest.fn(() => schedule),
+    }
+
+    await main('-d', '2022-03-14', '--dry-run')(infra)
+
+    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.createRepo).not.toBeCalled()
+    expect(infra.spawn).not.toBeCalledWith(expect.any(String), 'git', [
+      'subtree',
+      'push',
+      expect.any(String),
+      expect.any(String),
+      expect.any(String),
+    ])
+    expect(schedule).toBeCalled()
+  })
+
   it(`deploys today's challenge with "--for-date today"`, async () => {
     const schedule = jest.fn((on) => {
       on('1984-03-19').deploy('birthday-challenge').to('my-cohort-org')

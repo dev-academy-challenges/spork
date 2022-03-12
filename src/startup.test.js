@@ -28,7 +28,7 @@ describe('Startup', () => {
     expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} running...\n`)
   })
 
-  it('exists early with --help', async () => {
+  it('exits early with --help', async () => {
     const infra = {
       ...fakeInfra(),
     }
@@ -48,6 +48,20 @@ describe('Startup', () => {
     await main('--version')(infra)
 
     expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.spawn).not.toBeCalled()
+    expect(infra.createRepo).not.toBeCalled()
+  })
+
+  it('exits eartly with --init', async () => {
+    const infra = {
+      ...fakeInfra(),
+    }
+
+    await main('--init')(infra)
+
+    expect(infra.writeStdout).toBeCalledWith(
+      expect.stringMatching(/called with --init/)
+    )
     expect(infra.spawn).not.toBeCalled()
     expect(infra.createRepo).not.toBeCalled()
   })
