@@ -1,4 +1,5 @@
 const dotenv = require('dotenv')
+const Path = require('path/posix')
 
 const readArgs = require('./read-args')
 const formatDate = require('./format-date')
@@ -27,12 +28,13 @@ const main =
     let env = eff.env()
     eff.writeStdout(`${PROGRAM_NAME} running...\n`)
 
-    const SOSIJ_DIRECTORY = eff.resolvePath(
+    const SOSIJ_DIRECTORY = Path.resolve(
+      eff.cwd(),
       env.SOSIJ_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`
     )
-    const DEFAULT_SCHEDULE = eff.joinPath(SOSIJ_DIRECTORY, 'schedule.js')
+    const DEFAULT_SCHEDULE = Path.join(SOSIJ_DIRECTORY, 'schedule.js')
 
-    const envPath = eff.joinPath(SOSIJ_DIRECTORY, 'env')
+    const envPath = Path.join(SOSIJ_DIRECTORY, 'env')
 
     if (!eff.fsExists(SOSIJ_DIRECTORY)) {
       await eff.fsMkDir(SOSIJ_DIRECTORY)
@@ -74,7 +76,10 @@ const main =
         throw new Error(`Invalid start-date: ${flags.startDate}`)
       }
 
-      const schedulePath = eff.resolvePath(flags.schedule || DEFAULT_SCHEDULE)
+      const schedulePath = Path.resolve(
+        eff.cwd(),
+        flags.schedule || DEFAULT_SCHEDULE
+      )
       const scheduleJs = createSchedule(
         eff.newDate(flags.startDate),
         flags.campus,
@@ -102,7 +107,7 @@ const main =
       throw new Error('Environment Variable GITHUB_ACCESS_TOKEN is undefined')
     }
 
-    const MONOREPO_PATH = eff.joinPath(SOSIJ_DIRECTORY, 'monorepo-trial')
+    const MONOREPO_PATH = Path.join(SOSIJ_DIRECTORY, 'monorepo-trial')
     const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/monorepo-trial`
     if (!eff.fsExists(MONOREPO_PATH)) {
       eff.writeStdout(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
@@ -126,9 +131,10 @@ const main =
       return
     }
 
-    const schedulePath = eff
-      .resolvePath(flags.schedule || DEFAULT_SCHEDULE)
-      .replace(/\.js$/, '')
+    const schedulePath = Path.resolve(
+      eff.cwd(),
+      flags.schedule || DEFAULT_SCHEDULE
+    ).replace(/\.js$/, '')
 
     eff.writeStdout(`Loading schedule from ${schedulePath}\n`)
     const schedule = eff.require(schedulePath)

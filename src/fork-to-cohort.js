@@ -1,5 +1,7 @@
+const Path = require('path/posix')
+
 const forkToCohort = (repoPath, cohort, challengeName, env) => async (eff) => {
-  const pathToSubtree = eff.joinPath(repoPath, 'packages', challengeName)
+  const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
   if (!eff.fsExists(pathToSubtree)) {
     throw new Error(`${challengeName} doesn't exist in monorepo`)
   }
