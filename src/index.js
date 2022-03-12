@@ -1,4 +1,4 @@
-const infra = require('./infra')
+const infra = require('./infra/prod')
 const mainImpl = require('./main')
 
 const main = (...args) => mainImpl(...args)(infra)

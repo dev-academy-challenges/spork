@@ -1,10 +1,9 @@
 const FS = require('fs').promises
 const { existsSync: fsExists } = require('fs')
 
-const { spawn } = require('./utils/child-process')
-const { run } = require('./runner')
-const { version } = require('../package.json')
-const { createRepo } = require('./utils/github')
+const { spawn } = require('./child-process')
+const { version } = require('../../package.json')
+const { createRepo } = require('./github')
 
 module.exports = {
   writeStdout: (str) => process.stdout.write(str),
@@ -16,7 +15,6 @@ module.exports = {
   fsWrite: (...args) => FS.writeFile(...args),
   fsReadFile: (...args) => FS.readFile(...args),
   require: (path) => require(path),
-  run: (...args) => run(...args),
   newDate: (...args) => new Date(...args),
   version: () => version,
   createRepo: (org, name, env) => createRepo(org, name, env),
