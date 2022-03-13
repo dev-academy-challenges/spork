@@ -157,11 +157,12 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.spawn).toBeCalledWith(expect.any(String), 'git', [
-      'clone',
+    expect(infra.spawn).toBeCalledWith(
       expect.any(String),
-      `/~/.${APP_NAME}/monorepo-trial`,
-    ])
+      'git',
+      ['clone', expect.any(String), `/~/.${APP_NAME}/monorepo-trial`],
+      { secret: '_' }
+    )
   })
 
   it(`pulls from origin if the monorepo directory exists`, async () => {
@@ -179,7 +180,8 @@ describe('Startup', () => {
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
-      ['pull']
+      ['pull'],
+      { secret: '_' }
     )
   })
 

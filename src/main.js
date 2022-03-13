@@ -111,10 +111,17 @@ const main =
     const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/monorepo-trial`
     if (!eff.fsExists(MONOREPO_PATH)) {
       eff.writeStdout(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
-      await eff.spawn(eff.cwd(), 'git', ['clone', MONOREPO_URL, MONOREPO_PATH])
+      await eff.spawn(
+        eff.cwd(),
+        'git',
+        ['clone', MONOREPO_URL, MONOREPO_PATH],
+        { secret: GITHUB_ACCESS_TOKEN }
+      )
     } else {
       eff.writeStdout(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
-      await eff.spawn(MONOREPO_PATH, 'git', ['pull'])
+      await eff.spawn(MONOREPO_PATH, 'git', ['pull'], {
+        secret: GITHUB_ACCESS_TOKEN,
+      })
     }
 
     const today = eff.newDate()
@@ -143,10 +150,15 @@ const main =
       date: formatDate(targetDate),
       dryRun: !!flags.dryRun,
       repoPath: MONOREPO_PATH,
-      credentials: { GITHUB_USER, GITHUB_ACCESS_TOKEN },
     }
 
-    await runner(cfg, schedule)(eff)
+    await runner(
+      cfg,
+      schedule
+    )({
+      ...eff,
+      env: () => ({ ...eff.env(), GITHUB_USER, GITHUB_ACCESS_TOKEN }),
+    })
   }
 
 module.exports = main

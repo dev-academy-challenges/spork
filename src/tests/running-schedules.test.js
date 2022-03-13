@@ -51,11 +51,51 @@ describe('running schedules', () => {
         `--prefix=packages/todays-challenge`,
         `https://me:_@github.com/my-cohort-org/todays-challenge.git`,
         'main',
-      ]
+      ],
+      { secret: '_' }
     )
     expect(schedule).toBeCalled()
   })
 
+  it(`bails out if the named challenge doesn't exist`, async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: (path) =>
+        // the package must not exist in the monorepo
+        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge`,
+      require: jest.fn(() => schedule),
+    }
+
+    let err
+    try {
+      await main('-d', '2022-03-14')(infra)
+    } catch (e) {
+      err = e
+    }
+
+    expect(err).not.toBeNull()
+    expect(err.message).toMatch(/todays-challenge doesn't exist/)
+
+    expect(infra.createRepo).not.toBeCalled()
+    expect(infra.spawn).not.toBeCalledWith(
+      `/~/.${APP_NAME}/monorepo-trial`,
+      'git',
+      [
+        'subtree',
+        'push',
+        `--prefix=packages/todays-challenge`,
+        expect.any(String),
+        'main',
+      ],
+      { secret: expect.any(String) }
+    )
+    expect(schedule).toBeCalled()
+  })
   it('calls the schedule, in dry-run mode', async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
@@ -72,13 +112,18 @@ describe('running schedules', () => {
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
     expect(infra.createRepo).not.toBeCalled()
-    expect(infra.spawn).not.toBeCalledWith(expect.any(String), 'git', [
-      'subtree',
-      'push',
+    expect(infra.spawn).not.toBeCalledWith(
       expect.any(String),
-      expect.any(String),
-      expect.any(String),
-    ])
+      'git',
+      [
+        'subtree',
+        'push',
+        expect.any(String),
+        expect.any(String),
+        expect.any(String),
+      ],
+      { secret: expect.any(String) }
+    )
     expect(schedule).toBeCalled()
   })
 
@@ -116,7 +161,8 @@ describe('running schedules', () => {
         `--prefix=packages/birthday-challenge`,
         `https://me:_@github.com/my-cohort-org/birthday-challenge.git`,
         'main',
-      ]
+      ],
+      { secret: '_' }
     )
     expect(schedule).toBeCalled()
   })
@@ -155,7 +201,8 @@ describe('running schedules', () => {
         `--prefix=packages/just-some-challenge`,
         `https://me:_@github.com/my-cohort-org/just-some-challenge.git`,
         'main',
-      ]
+      ],
+      { secret: '_' }
     )
     expect(schedule).toBeCalled()
   })
@@ -193,7 +240,8 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
         `--prefix=packages/todays-challenge`,
         `https://peter:gh_peters_token@github.com/my-cohort-org/todays-challenge.git`,
         'main',
-      ]
+      ],
+      { secret: 'gh_peters_token' }
     )
 
     expect(infra.createRepo).toBeCalledWith(
