@@ -34,7 +34,7 @@ sosij will look for `~/.sosij/schedule.js` unless you pass `-s path/to/schedule.
 
 You need to pass a date in `--for-date=YYYY-MM-DD` format, and it will deploy challenges intended for exactly that day
 
-We also support `--for-date=today` and `--for-date=tomorrow`.
+We also support `--for-date=today` and `--for-date=tomorrow`. `sosij -d today` or `sosij -d tomorrow` is your friend (once a schedule is setup).
 
 A schedule should look like this:
 
@@ -65,7 +65,7 @@ This is a place to start but is missing some of the campus specific challenges.
 Valid values for campus are `welly`, `akl` and `online`
 
 ```sh
-$ sosij --generate-schedule \
+$ sosij --create-schedule \
   --cohort-org piwakawaka-2022 \
   --start-date 2022-03-14 \
   --campus welly \
