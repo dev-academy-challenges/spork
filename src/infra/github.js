@@ -31,7 +31,7 @@ const createRepo = (org, name, env) =>
       reject(e)
     })
 
-    req.end(JSON.stringify({ name }), 'utf8')
+    req.end(JSON.stringify({ name, visibility: 'internal' }), 'utf8')
   })
 
 module.exports = { createRepo }
