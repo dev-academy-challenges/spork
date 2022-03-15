@@ -12,7 +12,7 @@ describe('creating schedules', () => {
       err = e
     }
 
-    expect(err).not.toBeUndefined()
+    expect(err).toBeDefined()
   })
 
   it('produces js', async () => {
@@ -28,7 +28,7 @@ describe('creating schedules', () => {
       '2022-03-14'
     )(infra)
 
-    expect(infra.fsWrite).toBeCalledWith(
+    expect(infra.fsWrite).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/schedule.js`,
       expect.any(String),
       'utf8'
@@ -53,9 +53,9 @@ describe('creating schedules', () => {
       err = e
     }
 
-    expect(err).not.toBeUndefined()
+    expect(err).toBeDefined()
 
-    expect(infra.fsWrite).not.toBeCalledWith(
+    expect(infra.fsWrite).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/schedule.js`,
       expect.any(String),
       'utf8'
@@ -80,9 +80,9 @@ describe('creating schedules', () => {
       err = e
     }
 
-    expect(err).not.toBeUndefined()
+    expect(err).toBeDefined()
 
-    expect(infra.fsWrite).not.toBeCalledWith(
+    expect(infra.fsWrite).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/schedule.js`,
       expect.any(String),
       'utf8'
@@ -105,11 +105,11 @@ describe('creating schedules', () => {
       '2022-03-14'
     )(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(
+    expect(infra.writeStdout).toHaveBeenCalledWith(
       expect.stringMatching(/File exists at .*, not overwriting/)
     )
 
-    expect(infra.fsWrite).not.toBeCalledWith(
+    expect(infra.fsWrite).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/schedule.js`,
       expect.any(String),
       'utf8'
@@ -133,11 +133,11 @@ describe('creating schedules', () => {
       '--overwrite'
     )(infra)
 
-    expect(infra.writeStdout).not.toBeCalledWith(
+    expect(infra.writeStdout).not.toHaveBeenCalledWith(
       expect.stringMatching(/File exists at .*, not overwriting/)
     )
 
-    expect(infra.fsWrite).toBeCalledWith(
+    expect(infra.fsWrite).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/schedule.js`,
       expect.any(String),
       'utf8'

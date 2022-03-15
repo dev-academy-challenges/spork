@@ -13,11 +13,11 @@ describe('running schedules', () => {
 
     await main()(infra)
 
-    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(schedule).toBeCalled()
+    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(schedule).toHaveBeenCalled()
   })
 
-  it('calls the schedule', async () => {
+  it('deploys todays challenge from the schedule', async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
@@ -31,10 +31,10 @@ describe('running schedules', () => {
 
     await main('-d', '2022-03-14')(infra)
 
-    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toBeCalledWith({
+    expect(infra.post).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -50,7 +50,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toBeCalledWith({
+    expect(infra.post).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -66,7 +66,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       [
@@ -78,7 +78,7 @@ describe('running schedules', () => {
       ],
       { secret: '_' }
     )
-    expect(schedule).toBeCalled()
+    expect(schedule).toHaveBeenCalled()
   })
 
   it(`bails out if the named challenge doesn't exist`, async () => {
@@ -105,8 +105,8 @@ describe('running schedules', () => {
     expect(err).not.toBeNull()
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
 
-    expect(infra.post).not.toBeCalled()
-    expect(infra.spawn).not.toBeCalledWith(
+    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.spawn).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       [
@@ -118,7 +118,7 @@ describe('running schedules', () => {
       ],
       { secret: expect.any(String) }
     )
-    expect(schedule).toBeCalled()
+    expect(schedule).toHaveBeenCalled()
   })
   it('calls the schedule, in dry-run mode', async () => {
     const schedule = jest.fn((on) => {
@@ -134,9 +134,9 @@ describe('running schedules', () => {
 
     await main('-d', '2022-03-14', '--dry-run')(infra)
 
-    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.post).not.toBeCalled()
-    expect(infra.spawn).not.toBeCalledWith(
+    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.spawn).not.toHaveBeenCalledWith(
       expect.any(String),
       'git',
       [
@@ -148,7 +148,7 @@ describe('running schedules', () => {
       ],
       { secret: expect.any(String) }
     )
-    expect(schedule).toBeCalled()
+    expect(schedule).toHaveBeenCalled()
   })
 
   it(`deploys today's challenge with "--for-date today"`, async () => {
@@ -165,10 +165,10 @@ describe('running schedules', () => {
 
     await main('-d', 'today')(infra)
 
-    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toBeCalledWith({
+    expect(infra.post).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -184,7 +184,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toBeCalledWith({
+    expect(infra.post).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -200,7 +200,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       [
@@ -212,7 +212,7 @@ describe('running schedules', () => {
       ],
       { secret: '_' }
     )
-    expect(schedule).toBeCalled()
+    expect(schedule).toHaveBeenCalled()
   })
 
   it(`deploys tomorrows challenge with "--for-date tomorrow"`, async () => {
@@ -229,9 +229,9 @@ describe('running schedules', () => {
 
     await main('-d', 'tomorrow')(infra)
 
-    expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
     const basicAuth = Buffer.from('me:_').toString('base64')
-    expect(infra.post).not.toBeCalledWith({
+    expect(infra.post).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -247,7 +247,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).toBeCalledWith({
+    expect(infra.post).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -262,7 +262,7 @@ describe('running schedules', () => {
         visibility: 'internal',
       }),
     })
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       [
@@ -274,7 +274,7 @@ describe('running schedules', () => {
       ],
       { secret: '_' }
     )
-    expect(schedule).toBeCalled()
+    expect(schedule).toHaveBeenCalled()
   })
 
   it(`uses the credentials from /~/.${APP_NAME}/env`, async () => {
@@ -301,7 +301,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
 
     await main('-d', '2022-03-14')(infra)
 
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       [
@@ -315,7 +315,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
     )
 
     const basicAuth = Buffer.from('peter:gh_peters_token').toString('base64')
-    expect(infra.post).toBeCalledWith({
+    expect(infra.post).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,

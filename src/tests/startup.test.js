@@ -15,7 +15,7 @@ describe('Startup', () => {
       err = e
     }
 
-    expect(err).not.toBeUndefined()
+    expect(err).toBeDefined()
   })
 
   it('logs startup message immediately', async () => {
@@ -24,7 +24,7 @@ describe('Startup', () => {
     }
 
     await main()(infra)
-    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} running...\n`)
+    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} running...\n`)
   })
 
   it('exits early with --help', async () => {
@@ -34,9 +34,9 @@ describe('Startup', () => {
 
     await main('--help')(infra)
 
-    expect(infra.writeStdout).toBeCalled()
-    expect(infra.spawn).not.toBeCalled()
-    expect(infra.post).not.toBeCalled()
+    expect(infra.writeStdout).toHaveBeenCalled()
+    expect(infra.spawn).not.toHaveBeenCalled()
+    expect(infra.post).not.toHaveBeenCalled()
   })
 
   it('exits early with -h', async () => {
@@ -46,9 +46,9 @@ describe('Startup', () => {
 
     await main('-h')(infra)
 
-    expect(infra.writeStdout).toBeCalled()
-    expect(infra.spawn).not.toBeCalled()
-    expect(infra.post).not.toBeCalled()
+    expect(infra.writeStdout).toHaveBeenCalled()
+    expect(infra.spawn).not.toHaveBeenCalled()
+    expect(infra.post).not.toHaveBeenCalled()
   })
 
   it('exits early with --version', async () => {
@@ -58,9 +58,9 @@ describe('Startup', () => {
 
     await main('--version')(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
-    expect(infra.spawn).not.toBeCalled()
-    expect(infra.post).not.toBeCalled()
+    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.spawn).not.toHaveBeenCalled()
+    expect(infra.post).not.toHaveBeenCalled()
   })
 
   it('exits early with -v', async () => {
@@ -70,9 +70,9 @@ describe('Startup', () => {
 
     await main('-v')(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(`${APP_NAME} v1.0.0\n`)
-    expect(infra.spawn).not.toBeCalled()
-    expect(infra.post).not.toBeCalled()
+    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.spawn).not.toHaveBeenCalled()
+    expect(infra.post).not.toHaveBeenCalled()
   })
 
   it('exits eartly with --init', async () => {
@@ -82,11 +82,11 @@ describe('Startup', () => {
 
     await main('--init')(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(
+    expect(infra.writeStdout).toHaveBeenCalledWith(
       expect.stringMatching(/called with --init/)
     )
-    expect(infra.spawn).not.toBeCalled()
-    expect(infra.post).not.toBeCalled()
+    expect(infra.spawn).not.toHaveBeenCalled()
+    expect(infra.post).not.toHaveBeenCalled()
   })
 
   it('exits early if GITHUB_USER is missing', async () => {
@@ -131,8 +131,8 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.fsMkDir).toBeCalledWith(`/~/.${APP_NAME}`)
-    expect(infra.fsWrite).toBeCalledWith(
+    expect(infra.fsMkDir).toHaveBeenCalledWith(`/~/.${APP_NAME}`)
+    expect(infra.fsWrite).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/env`,
       expect.anything()
     )
@@ -146,7 +146,7 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.fsMkDir).not.toBeCalledWith('/~/.${APP_NAME}')
+    expect(infra.fsMkDir).not.toHaveBeenCalledWith('/~/.${APP_NAME}')
   })
 
   it(`clones the monorepo if the directory doesn't exist`, async () => {
@@ -157,7 +157,7 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       expect.any(String),
       'git',
       ['clone', expect.any(String), `/~/.${APP_NAME}/monorepo-trial`],
@@ -173,11 +173,11 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.writeStdout).toBeCalledWith(
+    expect(infra.writeStdout).toHaveBeenCalledWith(
       expect.stringMatching(/Monorepo exists at (.*) updating\n/)
     )
 
-    expect(infra.spawn).toBeCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
       ['pull'],
@@ -192,6 +192,6 @@ describe('Startup', () => {
 
     await main('-s', '~/schedule.js')(infra)
 
-    expect(infra.require).toBeCalledWith('/~/schedule')
+    expect(infra.require).toHaveBeenCalledWith('/~/schedule')
   })
 })

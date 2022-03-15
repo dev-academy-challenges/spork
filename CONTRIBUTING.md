@@ -52,7 +52,7 @@ through the faked infra.
 Our test files are arranged by workflows, not for which modules they exercise:
 
 - startup.test.js everything that happens when the app starts
-- running.test.js running schedules
+- running-schedules.test.js running schedules
 - creating-schedules.test.js creating schedule files
 
 This enables our tests to resemble the way our software is used (mostly).
