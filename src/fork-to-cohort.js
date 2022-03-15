@@ -1,4 +1,5 @@
 const Path = require('path/posix')
+const { createRepo } = require('./github')
 
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
@@ -9,10 +10,7 @@ const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = eff.env()
   const url = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/${cohort}/${challengeName}.git`
 
-  await eff.createRepo(cohort, challengeName, {
-    GITHUB_USER,
-    GITHUB_ACCESS_TOKEN,
-  })
+  await createRepo(cohort, challengeName)(eff)
 
   await eff.spawn(
     repoPath,

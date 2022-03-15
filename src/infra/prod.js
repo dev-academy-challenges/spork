@@ -3,7 +3,7 @@ const { existsSync: fsExists } = require('fs')
 
 const { spawn } = require('./child-process')
 const { version } = require('../../package.json')
-const { createRepo } = require('./github')
+const { post } = require('./https')
 
 module.exports = {
   writeStdout: (str) => process.stdout.write(str),
@@ -17,5 +17,5 @@ module.exports = {
   require: (path) => require(path),
   newDate: (...args) => new Date(...args),
   version: () => version,
-  createRepo: (org, name, env) => createRepo(org, name, env),
+  post: (...args) => post(...args),
 }
