@@ -12,7 +12,7 @@ const fakeInfra = () => ({
   newDate: (...args) =>
     args.length === 0 ? new Date(448502400000) : new Date(...args),
   version: () => '1.0.0',
-  createRepo: jest.fn(async () => null),
+  post: jest.fn(async () => null),
 })
 
 module.exports = fakeInfra

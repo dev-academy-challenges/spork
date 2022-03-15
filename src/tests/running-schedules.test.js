@@ -32,16 +32,40 @@ describe('running schedules', () => {
     await main('-d', '2022-03-14')(infra)
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.createRepo).toBeCalledWith(
-      'my-cohort-org',
-      'todays-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
-    expect(infra.createRepo).not.toBeCalledWith(
-      'my-cohort-org',
-      'tomorrows-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    expect(infra.post).toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'todays-challenge',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.post).not.toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'tomorrows-challenge',
+        visibility: 'internal',
+      }),
+    })
+
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
@@ -81,7 +105,7 @@ describe('running schedules', () => {
     expect(err).not.toBeNull()
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
 
-    expect(infra.createRepo).not.toBeCalled()
+    expect(infra.post).not.toBeCalled()
     expect(infra.spawn).not.toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
@@ -111,7 +135,7 @@ describe('running schedules', () => {
     await main('-d', '2022-03-14', '--dry-run')(infra)
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.createRepo).not.toBeCalled()
+    expect(infra.post).not.toBeCalled()
     expect(infra.spawn).not.toBeCalledWith(
       expect.any(String),
       'git',
@@ -142,16 +166,40 @@ describe('running schedules', () => {
     await main('-d', 'today')(infra)
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.createRepo).toBeCalledWith(
-      'my-cohort-org',
-      'birthday-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
-    expect(infra.createRepo).not.toBeCalledWith(
-      'my-cohort-org',
-      'just-some-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    expect(infra.post).toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'birthday-challenge',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.post).not.toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'just-some-challenge',
+        visibility: 'internal',
+      }),
+    })
+
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
@@ -182,16 +230,38 @@ describe('running schedules', () => {
     await main('-d', 'tomorrow')(infra)
 
     expect(infra.require).toBeCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.createRepo).not.toBeCalledWith(
-      'my-cohort-org',
-      'birthday-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
-    expect(infra.createRepo).toBeCalledWith(
-      'my-cohort-org',
-      'just-some-challenge',
-      { GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_' }
-    )
+    const basicAuth = Buffer.from('me:_').toString('base64')
+    expect(infra.post).not.toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'birthday-challenge',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.post).toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'just-some-challenge',
+        visibility: 'internal',
+      }),
+    })
     expect(infra.spawn).toBeCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
@@ -244,10 +314,21 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
       { secret: 'gh_peters_token' }
     )
 
-    expect(infra.createRepo).toBeCalledWith(
-      'my-cohort-org',
-      'todays-challenge',
-      { GITHUB_USER: 'peter', GITHUB_ACCESS_TOKEN: 'gh_peters_token' }
-    )
+    const basicAuth = Buffer.from('peter:gh_peters_token').toString('base64')
+    expect(infra.post).toBeCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'todays-challenge',
+        visibility: 'internal',
+      }),
+    })
   })
 })
