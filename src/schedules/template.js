@@ -26,39 +26,14 @@ const template = (w) =>
     ),
     w.on(w.week(1), w.thu(), w.all(), w.deploy('tdd-bowling-kata', 'conways')),
     w.on(w.week(1), w.fri(), w.all(), w.deploy('ascii-art-reader')),
-    w.on(
-      w.week(2),
-      w.mon(),
-      w.all(),
-      w.deploy('express-server')
-    ),
-    w.on(
-      w.week(2),
-      w.tue(),
-      w.all(),
-      w.deploy('server-side-rendering')
-    ),
+    w.on(w.week(2), w.mon(), w.all(), w.deploy('express-server')),
+    w.on(w.week(2), w.tue(), w.all(), w.deploy('server-side-rendering')),
     w.on(w.week(2), w.wed(), w.all(), w.deploy('pupparazzi')),
-    w.on(
-      w.week(2),
-      w.thu(),
-      w.all(),
-      w.deploy('heroku-checklist')
-    ),
+    w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
-    w.on(
-      w.week(3),
-      w.wed(),
-      w.all(),
-      w.deploy('database-diagram')
-    ),
-    w.on(
-      w.week(3),
-      w.wed(),
-      w.akl(),
-      w.deploy('dreamfest')
-    ),
+    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram')),
+    w.on(w.week(3), w.wed(), w.akl(), w.deploy('dreamfest')),
     w.on(
       w.week(3),
       w.wed(),
@@ -90,40 +65,21 @@ const template = (w) =>
     ),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-webpack')),
-    w.on(
-      w.week(5),
-      w.mon(),
-      w.all(),
-      w.deploy('charlottes-web-log-api')
-    ),
+    w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
-    w.on(
-      w.week(5),
-      w.wed(),
-      w.all(),
-      w.deploy('consuming-external-apis')
-    ),
+    w.on(w.week(5), w.wed(), w.all(), w.deploy('consuming-external-apis')),
     w.on(w.week(6), w.mon(), w.all(), w.deploy('redux-minimal')),
-    w.on(
-      w.week(6),
-      w.tue(),
-      w.all(),
-      w.deploy('sweet-as-beers')
-    ),
-    w.on(
-      w.week(6),
-      w.wed(),
-      w.akl(),
-      w.deploy('sweet-as-organics-api')
-    ),
+    w.on(w.week(6), w.tue(), w.all(), w.deploy('sweet-as-beers')),
+    w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(
       w.week(6),
       w.thu(),
       w.all(),
       w.deploy(
-        'boilerplate-fullstack', 
-        'todo-full-stack', 
-        'my-fullstack-collection')
+        'boilerplate-fullstack',
+        'todo-full-stack',
+        'my-fullstack-collection'
+      )
     ),
     w.on(
       w.week(6),
@@ -131,12 +87,7 @@ const template = (w) =>
       w.except(w.akl()),
       w.deploy('async-redux-stories')
     ),
-    w.on(
-      w.week(7),
-      w.mon(),
-      w.all(),
-      w.deploy('jwt-auth')
-    )
+    w.on(w.week(7), w.mon(), w.all(), w.deploy('jwt-auth'))
   )
 
 module.exports = template
