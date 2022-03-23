@@ -60,8 +60,8 @@ Run this to inspect the schedule for mistakes.
 code ~/.sosij/schedule.js
 ```
 
-Now you are ready to run a schedule, if you run this. `sosij` will determine
-which repos would be deployed and log them out **but it does not deploy them**
+Now you are ready to run a schedule. If you run this `sosij` will determine
+which repos would be deployed and log them out **but it does not deploy them**:
 
 ```sh
 sosij -d tomorrow --dry-run
@@ -87,7 +87,7 @@ sosij -d 2022-04-05 # deploying challenges for the 5th of April
 sosij -d today
 ```
 
-That shoul be everything you need for day-to-day use of sosij.
+That should be everything you need for day-to-day use of sosij.
 
 # Schedule files
 
