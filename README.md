@@ -14,29 +14,84 @@
 
 `sosij` is an experimental cli tool to push challenges into cohort orgs on a schedule
 
-### Quickstart Guide
+# Quickstart Guide
 
-sosij creates a directory at `~/.sosij` (this is configurable), so this is the
-fastest way to get set up.
-
-sosij expects `GITHUB_USER` and `GITHUB_ACCESS_TOKEN` to be in the environment,
-it will load variables from `~/.sosij/env`.
+Install sosij directly from github with this npm command
 
 ```sh
-$ npm install -g https://github.com/dev-academy-challenges/sosij.git
-$ sosij --init
-$ code ~/.sosij/env
+npm install -g https://github.com/dev-academy-challenges/sosij.git
 ```
 
-### Running a schedule
+Run this command to create the `~/.sosij` directory
 
-sosij will look for `~/.sosij/schedule.js` unless you pass `-s path/to/schedule.js` or `--schedule path/to/schedule.js`
+```sh
+sosij --init
+```
 
-You need to pass a date in `--for-date=YYYY-MM-DD` format, and it will deploy challenges intended for exactly that day
+[Create a new Github Access Token](https://github.com/settings/tokens) with
+`repo` permissions (I call mine "sosij") then add your `GITHUB_USER` and
+`GITHUB_ACCESS_TOKEN` to the `~/.sosij/env` file.
 
-We also support `--for-date=today` and `--for-date=tomorrow`. `sosij -d today` or `sosij -d tomorrow` is your friend (once a schedule is setup).
+```sh
+code ~/.sosij/env
+```
 
-A schedule should look like this:
+`sosij` can bootstrap a schedule for you with a command like this.
+
+You'll need to substitute the correct values for `cohort-org`, `start-date` and `campus`.
+
+The names of the campusses are `welly`, `akl`, and `online`.
+
+```sh
+sosij --create-schedule \
+  --cohort-org piwakawaka-2022 \
+  --start-date 2022-03-14 \
+  --campus welly
+```
+
+This writes to `~/.sosij/schedule.js` by default, so if that file exists you'll
+need to delete it first or use the `--overwrite` flag. For example if you're
+starting a new cohort you'll probably want to replace the previous schedule with
+a new one.
+
+Run this to inspect the schedule for mistakes.
+
+```sh
+code ~/.sosij/schedule.js
+```
+
+Now you are ready to run a schedule, if you run this. `sosij` will determine
+which repos would be deployed and log them out **but it does not deploy them**
+
+```sh
+sosij -d tomorrow --dry-run
+```
+
+If the output looks correct to you, run the command again without `--dry-run`:
+
+```sh
+sosij -d tomorrow
+```
+
+Those two commands should be the majority of how you interact with sosij, the
+other common scenario is running it for a specific date (maybe deploying on a
+Friday for the Monday).
+
+```sh
+sosij -d 2022-04-05 # deploying challenges for the 5th of April
+```
+
+... or if you're deploying for today.
+
+```sh
+sosij -d today
+```
+
+That shoul be everything you need for day-to-day use of sosij.
+
+# Schedule files
+
+Schedule files are javascript files that export a function like this:
 
 ```javascript
 module.exports = (on) => {
@@ -56,18 +111,106 @@ module.exports = (on) => {
 }
 ```
 
-If you want to see what would be deployed, but not actually run deployment use the `--dry-run` flag
+It should take the `on` function as its only parameter and call it in this pattern:
 
-### Generating a schedule
+```javascript
+on(dateString)
+  .deploy(...challenges)
+  .to(cohortOrg)
+```
 
-This is a place to start but is missing some of the campus specific challenges.
+These are required as regular node modules, so you can do more or less anything
+you like in them.
 
-Valid values for campus are `welly`, `akl` and `online`
+- add comments
+- require() other schedules into some kind of super schedule
+- include or exclude challenges based on environment variables
+- log things
+
+This also means you should only run schedules that you trust.
+
+# Running schedules
+
+Running sosij with a `-d`/`--for-date` parameter will try to run a schedule. The
+parameter should be "today", "tomorrow" or a date string in the `YYYY-MM-DD`
+format
 
 ```sh
-$ sosij --create-schedule \
+sosij --for-date tomorrow
+sosij -d tomorrow
+sosij --for-date today
+sosij -d today
+sosij --for-date 2022-05-01 # YYYY-MM-DD format
+sosij -d 2022-05-01
+```
+
+By default sosij looks for `~/.sosij/schedule.js` unless you pass a path with `-s`/`--schedule`
+
+```sh
+sosij -d tomorrow -s ./my-schedule.js
+sosij -d tomorrow --schedule ./my-schedule.js
+```
+
+The cautious thing to do when running a schedule is to try it first with `--dry-run`
+
+```sh
+sosij -d tomorrow -s ./my-schedule.js --dry-run
+sosij -d tomorrow --dry-run
+```
+
+This will update your local copy of the monorepo and decide based on the
+schedule what needs to be deployed, but it will not deploy anything.
+
+# Creating schedules from the template
+
+sosij has a template internally that it uses to bootstrap schedules.
+
+sosij will generate a schedule when passed the `--create-schedule` flag.
+
+```javascript
+sosij --create-schedule \
   --cohort-org piwakawaka-2022 \
   --start-date 2022-03-14 \
-  --campus welly \
-  --schedule ~/welly-term2-schedule.js
+  --campus welly
+  --schedule ./example-schedule.js
+```
+
+The valid campus names are: `welly`, `akl` and `online`
+
+sosij uses these internally to include the correct challenges.
+
+Unfortunately the [template](https://github.com/dev-academy-challenges/sosij/blob/main/src/schedules/template.js) is not very readable code.
+
+**NB: You don't have to learn this weird little language if you find a problem with your schedule, just hit [me](gerard.paapu@devacademy.co.nz) up and I will fix it. This is documented for the curious or masochistic.**
+
+The template is a function that takes one parameter `w` (I promise I'll eventually make this nicer), which has all the methods we use to build a schedule.
+
+- `w.schedule(...events)` takes any number of events and returns the schedule
+- `w.on(week, day, campusPattern, action)` creates an event
+- `w.week(number)` creates a week, the weeks are numbered from the start of a cohort so that `1` is the first week
+- `w.mon()`, `w.tue()`, `w.wed()`, `w.thu()` and `w.fri()` create the days of the working week
+- `w.all()` is a campus pattern that matches any campus
+- `w.welly()` is a campus pattern that matches `'welly'`, `w.akl()` matches `'akl'` and `w.online()` matches `'online'`
+- `w.except(...patterns)` is a campus pattern that matches any campus that isn't matched by `patterns`
+- `w.deploy(...challenges)` creates an action that deploys the named challenges
+
+So this is an example that will deploy `hotdog-machine` on Week 4 Monday for everyone
+
+```javascript
+w.on(w.week(4), w.mon(), w.all(), w.deploy('hotdog-machine')),
+```
+
+... but if only Auckland use `hotdog-machine`, we would write it like this:
+
+```javascript
+w.on(w.week(4), w.mon(), w.akl(), w.deploy('hotdog-machine')),
+```
+
+... actually it turns out that online like hotdogs too, so we would write this
+instead. We're using `w.except(...)` to exclude Wellington and adding another
+challenge that they use instead.
+
+```javascript
+w.on(w.week(4), w.mon(), w.except(w.welly()), w.deploy('hotdog-machine')),
+w.on(w.week(4), w.mon(), w.welly(), w.deploy('vegan-hotdog-alternative-machine')),
 ```
