@@ -180,7 +180,11 @@ describe('Startup', () => {
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/monorepo-trial`,
       'git',
-      ['pull'],
+      [
+        'pull',
+        'https://me:_@github.com/dev-academy-challenges/monorepo-trial',
+        'main',
+      ],
       { secret: '_' }
     )
   })
