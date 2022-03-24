@@ -183,7 +183,7 @@ describe('Startup', () => {
       [
         'pull',
         'https://me:_@github.com/dev-academy-challenges/monorepo-trial',
-        'main',
+        'main:main',
       ],
       { secret: '_' }
     )

@@ -119,9 +119,14 @@ const main =
       )
     } else {
       eff.writeStdout(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
-      await eff.spawn(MONOREPO_PATH, 'git', ['pull', MONOREPO_URL, 'main'], {
-        secret: GITHUB_ACCESS_TOKEN,
-      })
+      await eff.spawn(
+        MONOREPO_PATH,
+        'git',
+        ['pull', MONOREPO_URL, 'main:main'],
+        {
+          secret: GITHUB_ACCESS_TOKEN,
+        }
+      )
     }
 
     const today = eff.newDate()
