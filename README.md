@@ -89,12 +89,21 @@ sosij -d today
 
 That should be everything you need for day-to-day use of sosij.
 
-# Importing recently-updated challenges
+# Refreshing recently-updated challenges
 
 Sosij gets the challenges from [monorepo-trial](https://github.com/dev-academy-challenges/monorepo-trial), so if a challenge gets updated in [dev-academy-challenges](https://github.com/dev-academy-challenges) you need to refresh monorepo-trial with the latest version of the challenge before using sosij to push the challenge to a cohort org.
 
+First clone down [monorepo-trial](https://github.com/dev-academy-challenges/monorepo-trial) if you haven't already. Then from the `main` branch of your local copy of monorepo-trial:
+
 ```sh
+git pull
 git subtree pull --prefix=packages/$CHALLENGE_NAME git@github.com:dev-academy-challenges/$CHALLENGE_NAME main
+git push origin main 
+```
+
+e.g. 
+```sh
+git subtree pull --prefix=packages/lightning-talks git@github.com:dev-academy-challenges/lightning-talks main
 ```
 
 Or reach out to [me](gerard.paapu@devacademy.co.nz) and I'll do it. 
