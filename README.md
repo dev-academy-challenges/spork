@@ -89,6 +89,16 @@ sosij -d today
 
 That should be everything you need for day-to-day use of sosij.
 
+# Importing recently-updated challenges
+
+Sosij gets the challenges from [monorepo-trial](https://github.com/dev-academy-challenges/monorepo-trial), so if a challenge gets updated in [dev-academy-challenges](https://github.com/dev-academy-challenges) you need to refresh monorepo-trial with the latest version of the challenge before using sosij to push the challenge to a cohort org.
+
+```sh
+git subtree pull --prefix=packages/$CHALLENGE_NAME git@github.com:dev-academy-challenges/$CHALLENGE_NAME main
+```
+
+Or reach out to [me](gerard.paapu@devacademy.co.nz) and I'll do it. 
+
 # Schedule files
 
 Schedule files are javascript files that export a function like this:
