@@ -121,6 +121,31 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
 
+  it(`even --dry-run fails for a challenge that doesn't exist in the monorepo`, async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: (path) =>
+        // the package must not exist in the monorepo
+        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge`,
+      require: jest.fn(() => schedule),
+    }
+
+    let err
+    try {
+      await main('-d', '2022-03-14', '--dry-run')(infra)
+    } catch (e) {
+      err = e
+    }
+
+    expect(err).not.toBeNull()
+    expect(err.message).toMatch(/todays-challenge doesn't exist/)
+  })
+
   it(`continues past failed deploys`, async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14')
