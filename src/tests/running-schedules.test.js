@@ -81,7 +81,7 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
 
-  it(`bails out if the named challenge doesn't exist`, async () => {
+  it(`doesn't try to deploy a challenge that doesn't exist in the monorepo`, async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
@@ -120,6 +120,76 @@ describe('running schedules', () => {
     )
     expect(schedule).toHaveBeenCalled()
   })
+
+  it(`continues past failed deploys`, async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14')
+        .deploy('todays-challenge-1', 'todays-challenge-2')
+        .to('my-cohort-org')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: (path) =>
+        // the 1st package must not exist in the monorepo
+        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge-1`,
+      require: jest.fn(() => schedule),
+    }
+
+    let err
+    try {
+      await main('-d', '2022-03-14')(infra)
+    } catch (e) {
+      err = e
+    }
+
+    expect(err).not.toBeNull()
+    expect(err.message).toMatch(/todays-challenge-1 doesn't exist/)
+    expect(infra.post).toHaveBeenCalledTimes(1)
+    expect(infra.post).toHaveBeenCalledWith({
+      body: JSON.stringify({
+        name: 'todays-challenge-2',
+        visibility: 'internal',
+      }),
+      headers: {
+        Authorization: 'Basic bWU6Xw==',
+        'Content-Type': 'application/json',
+        'User-Agent': 'fork-to-cohort',
+      },
+      hostname: 'api.github.com',
+      method: 'POST',
+      path: '/orgs/my-cohort-org/repos',
+      port: 443,
+    })
+
+    expect(infra.spawn).not.toHaveBeenCalledWith(
+      `/~/.${APP_NAME}/monorepo-trial`,
+      'git',
+      [
+        'subtree',
+        'push',
+        `--prefix=packages/todays-challenge-1`,
+        expect.any(String),
+        'main',
+      ],
+      { secret: expect.any(String) }
+    )
+    expect(infra.spawn).toHaveBeenCalledWith(
+      `/~/.${APP_NAME}/monorepo-trial`,
+      'git',
+      [
+        'subtree',
+        'push',
+        `--prefix=packages/todays-challenge-2`,
+        expect.any(String),
+        'main',
+      ],
+      { secret: expect.any(String) }
+    )
+    expect(schedule).toHaveBeenCalled()
+  })
+
   it('calls the schedule, in dry-run mode', async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
