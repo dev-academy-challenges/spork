@@ -56,12 +56,7 @@ const template = (w) =>
       w.week(4),
       w.tue(),
       w.all(),
-      w.deploy(
-        'broken-kaleidoscope',
-        'memory',
-        'enspiraled',
-        'boilerplate-react-webpack'
-      )
+      w.deploy('broken-kaleidoscope', 'memory', 'enspiraled')
     ),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-webpack')),
