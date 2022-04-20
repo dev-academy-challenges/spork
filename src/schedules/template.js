@@ -68,20 +68,17 @@ const template = (w) =>
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(
       w.week(6),
-      w.thu(),
-      w.all(),
-      w.deploy(
-        'boilerplate-fullstack',
-        'todo-full-stack',
-        'my-fullstack-collection'
-      )
-    ),
-    w.on(
-      w.week(6),
       w.wed(),
       w.except(w.akl()),
       w.deploy('async-redux-stories')
     ),
+    w.on(
+      w.week(6),
+      w.wed(),
+      w.all(),
+      w.deploy('todo-full-stack', 'my-fullstack-collection')
+    ),
+    w.on(w.week(6), w.thu(), w.all(), w.deploy('boilerplate-fullstack')),
     w.on(w.week(7), w.mon(), w.all(), w.deploy('jwt-auth'))
   )
 
