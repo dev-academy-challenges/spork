@@ -9,6 +9,8 @@ const runner = require('./runner')
 const createSchedule = require('./schedules/index')
 const PROGRAM_NAME = require('./app-name')
 
+const MONOREPO_NAME = 'challenges'
+
 const main =
   (...args) =>
   async (eff) => {
@@ -42,6 +44,11 @@ const main =
         envPath,
         exampleEnv(env.GITHUB_USER || '', env.GITHUB_ACCESS_TOKEN || '')
       )
+    }
+
+    const reposPath = Path.join(SPORK_DIRECTORY, 'repos')
+    if (!eff.fsExists(reposPath)) {
+      await eff.fsMkDir(reposPath)
     }
 
     if (flags.init) {
@@ -107,8 +114,8 @@ const main =
       throw new Error('Environment Variable GITHUB_ACCESS_TOKEN is undefined')
     }
 
-    const MONOREPO_PATH = Path.join(SPORK_DIRECTORY, 'monorepo-trial')
-    const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/monorepo-trial`
+    const MONOREPO_PATH = Path.join(reposPath, 'challenges')
+    const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
     if (!eff.fsExists(MONOREPO_PATH)) {
       eff.writeStdout(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
       await eff.spawn(

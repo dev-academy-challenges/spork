@@ -160,7 +160,7 @@ describe('Startup', () => {
     expect(infra.spawn).toHaveBeenCalledWith(
       expect.any(String),
       'git',
-      ['clone', expect.any(String), `/~/.${APP_NAME}/monorepo-trial`],
+      ['clone', expect.any(String), `/~/.${APP_NAME}/repos/challenges`],
       { secret: '_' }
     )
   })
@@ -178,11 +178,11 @@ describe('Startup', () => {
     )
 
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'pull',
-        'https://me:_@github.com/dev-academy-challenges/monorepo-trial',
+        'https://me:_@github.com/dev-academy-challenges/challenges',
         'main:main',
       ],
       { secret: '_' }

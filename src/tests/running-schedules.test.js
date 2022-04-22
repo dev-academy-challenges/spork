@@ -67,7 +67,7 @@ describe('running schedules', () => {
     })
 
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -91,7 +91,7 @@ describe('running schedules', () => {
       ...fakeInfra(),
       fsExists: (path) =>
         // the package must not exist in the monorepo
-        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge`,
+        path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
       require: jest.fn(() => schedule),
     }
 
@@ -107,7 +107,7 @@ describe('running schedules', () => {
 
     expect(infra.post).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -131,7 +131,7 @@ describe('running schedules', () => {
       ...fakeInfra(),
       fsExists: (path) =>
         // the package must not exist in the monorepo
-        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge`,
+        path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
       require: jest.fn(() => schedule),
     }
 
@@ -158,7 +158,7 @@ describe('running schedules', () => {
       ...fakeInfra(),
       fsExists: (path) =>
         // the 1st package must not exist in the monorepo
-        path !== `/~/.${APP_NAME}/monorepo-trial/packages/todays-challenge-1`,
+        path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge-1`,
       require: jest.fn(() => schedule),
     }
 
@@ -189,7 +189,7 @@ describe('running schedules', () => {
     })
 
     expect(infra.spawn).not.toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -201,7 +201,7 @@ describe('running schedules', () => {
       { secret: expect.any(String) }
     )
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -296,7 +296,7 @@ describe('running schedules', () => {
     })
 
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -358,7 +358,7 @@ describe('running schedules', () => {
       }),
     })
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
@@ -397,7 +397,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
     await main('-d', '2022-03-14')(infra)
 
     expect(infra.spawn).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/monorepo-trial`,
+      `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'subtree',
