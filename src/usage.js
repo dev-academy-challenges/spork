@@ -5,7 +5,7 @@ module.exports = `usage: ${APP_NAME} <options>
 Deploy EDA challenges to their cohort orgs on a schedule
 
 ${APP_NAME} uses the directory ~/.${APP_NAME} (this path can be set by
-the environment variable SOSIJ_DIRECTORY)
+the environment variable ${APP_NAME.toUpperCase()}_DIRECTORY)
 
 - ~/.${APP_NAME}/monorepo-trial: a clone of the challenges monorepo
 - ~/.${APP_NAME}/env: environment variables will be read from this

@@ -1,13 +1,14 @@
 {
-  "name": "sosij",
+  "name": "spork",
   "version": "1.2.0",
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git@github.com:dev-academy-challenges/sosij.git"
+    "url": "git@github.com:dev-academy-challenges/spork.git"
   },
   "bin": {
-    "sosij": "bin.js"
+    "spork": "bin.js",
+    "publish-challenges": "bin.js"
   },
   "main": "index.js",
   "scripts": {

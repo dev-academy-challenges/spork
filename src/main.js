@@ -28,16 +28,16 @@ const main =
     let env = eff.env()
     eff.writeStdout(`${PROGRAM_NAME} running...\n`)
 
-    const SOSIJ_DIRECTORY = Path.resolve(
+    const SPORK_DIRECTORY = Path.resolve(
       eff.cwd(),
-      env.SOSIJ_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`
+      env.SPORK_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`
     )
-    const DEFAULT_SCHEDULE = Path.join(SOSIJ_DIRECTORY, 'schedule.js')
+    const DEFAULT_SCHEDULE = Path.join(SPORK_DIRECTORY, 'schedule.js')
 
-    const envPath = Path.join(SOSIJ_DIRECTORY, 'env')
+    const envPath = Path.join(SPORK_DIRECTORY, 'env')
 
-    if (!eff.fsExists(SOSIJ_DIRECTORY)) {
-      await eff.fsMkDir(SOSIJ_DIRECTORY)
+    if (!eff.fsExists(SPORK_DIRECTORY)) {
+      await eff.fsMkDir(SPORK_DIRECTORY)
       await eff.fsWrite(
         envPath,
         exampleEnv(env.GITHUB_USER || '', env.GITHUB_ACCESS_TOKEN || '')
@@ -49,7 +49,7 @@ const main =
       return
     }
 
-    // load ~/.sosij/env
+    // load ~/.spork/env
     if (eff.fsExists(envPath)) {
       eff.writeStdout(`"${envPath}" exists, loading vars\n\n`)
       const bytes = await eff.fsReadFile(envPath, 'utf8')
@@ -107,7 +107,7 @@ const main =
       throw new Error('Environment Variable GITHUB_ACCESS_TOKEN is undefined')
     }
 
-    const MONOREPO_PATH = Path.join(SOSIJ_DIRECTORY, 'monorepo-trial')
+    const MONOREPO_PATH = Path.join(SPORK_DIRECTORY, 'monorepo-trial')
     const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/monorepo-trial`
     if (!eff.fsExists(MONOREPO_PATH)) {
       eff.writeStdout(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)

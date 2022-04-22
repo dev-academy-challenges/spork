@@ -1,8 +1,4 @@
-# Contributing to sosij
-
-## Please suggest a better name
-
-Sosij doesn't have any special meaning, I'm just not great at naming things
+# Contributing to spork
 
 ## Features are expensive
 
