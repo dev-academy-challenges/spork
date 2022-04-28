@@ -29,7 +29,7 @@ const template = (w) =>
       w.week(1),
       w.thu(),
       w.welly(),
-      w.deploy('tdd-bowling-kata-solution', 'conways-solution-solution')
+      w.deploy('tdd-bowling-kata-solution', 'conways-solution')
     ),
     w.on(w.week(1), w.fri(), w.all(), w.deploy('ascii-art-reader')),
     w.on(w.week(1), w.fri(), w.welly(), w.deploy('ascii-art-reader-solution')),
@@ -46,7 +46,7 @@ const template = (w) =>
     w.on(w.week(2), w.wed(), w.welly(), w.deploy('pupparazzi-solution')),
     w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
-    w.on(w.week(3), w.mon(), w.welly(), w.deploy('knex-todo-cli-stories')),
+    w.on(w.week(3), w.mon(), w.welly(), w.deploy('knex-todo-cli-solution')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
     w.on(
       w.week(3),
