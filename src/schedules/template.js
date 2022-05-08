@@ -55,12 +55,12 @@ const template = (w) =>
       w.deploy('knex-joins-stories-solution')
     ),
     w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram')),
-    w.on(w.week(3), w.wed(), w.akl(), w.deploy('dreamfest')),
+    w.on(w.week(3), w.wed(), w.welly(), w.deploy('knex-relationships-stories')),
     w.on(
       w.week(3),
       w.wed(),
-      w.except(w.akl()),
-      w.deploy('knex-relationships-stories')
+      w.except(w.welly()),
+      w.deploy('dreamfest')
     ),
     w.on(
       w.week(3),
