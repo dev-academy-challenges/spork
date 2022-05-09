@@ -18,6 +18,7 @@ const template = (w) =>
         'kata-number-patterns'
       )
     ),
+    w.on(w.week(1), w.tue(), w.online(), w.deploy('remote-git-iam')),
     w.on(
       w.week(1),
       w.wed(),
@@ -55,13 +56,8 @@ const template = (w) =>
       w.deploy('knex-joins-stories-solution')
     ),
     w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram')),
-    w.on(w.week(3), w.wed(), w.akl(), w.deploy('dreamfest')),
-    w.on(
-      w.week(3),
-      w.wed(),
-      w.except(w.akl()),
-      w.deploy('knex-relationships-stories')
-    ),
+    w.on(w.week(3), w.wed(), w.welly(), w.deploy('knex-relationships-stories')),
+    w.on(w.week(3), w.wed(), w.except(w.welly()), w.deploy('dreamfest')),
     w.on(
       w.week(3),
       w.thu(),
@@ -98,6 +94,7 @@ const template = (w) =>
     ),
 
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
+    w.on(w.week(4), w.wed(), w.welly(), w.deploy('worldwide-routing-solution')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-webpack')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
