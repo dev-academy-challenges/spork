@@ -6,6 +6,7 @@ const template = (w) =>
       w.all(),
       w.deploy('two-truths-and-a-lie', 'kata-objects-and-arrays')
     ),
+    w.on(w.week(1), w.mon(), w.online(), w.deploy('remote-git-iam')),
     w.on(
       w.week(1),
       w.tue(),
@@ -18,7 +19,6 @@ const template = (w) =>
         'kata-number-patterns'
       )
     ),
-    w.on(w.week(1), w.tue(), w.online(), w.deploy('remote-git-iam')),
     w.on(
       w.week(1),
       w.wed(),
