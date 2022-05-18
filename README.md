@@ -239,3 +239,10 @@ challenge that they use instead.
 w.on(w.week(4), w.mon(), w.except(w.welly()), w.deploy('hotdog-machine')),
 w.on(w.week(4), w.mon(), w.welly(), w.deploy('vegan-hotdog-alternative-machine')),
 ```
+# If you need to update the template
+
+If you need to update the base template (so that your changes apply for all future cohorts), it's at `/src/schedules/template.js` 
+* Make your changes in a branch 
+* Don't forget `npx prettier --write foldername`
+* Do `npm version patch` to increment the version number
+* Then make a PR and send it to Gerard to review
