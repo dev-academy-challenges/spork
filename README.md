@@ -40,7 +40,7 @@ spork --init
 ```sh
 code ~/.spork/env
 ```
-> **Note:** don't forget to umcomment `GUTHUB_USER` and `GITHUB_ACCESS_TOKEN`
+> **Note:** don't forget to umcomment `GITHUB_USER` and `GITHUB_ACCESS_TOKEN`
 > by removing the '#'
 
 `spork` can bootstrap a schedule for you with a command like this.
