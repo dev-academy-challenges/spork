@@ -99,22 +99,27 @@ const template = (w) =>
     w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
     w.on(w.week(5), w.wed(), w.all(), w.deploy('consuming-external-apis')),
-    w.on(w.week(6), w.mon(), w.all(), w.deploy('redux-minimal')), // online might not teach this, or might teach a revised version
+    w.on(w.week(6), w.mon(), w.all(), w.deploy('redux-minimal')), // TODO: change this to redux-zoo for Online
     w.on(w.week(6), w.mon(), w.welly(), w.deploy('redux-minimal-solution')),
-    w.on(w.week(6), w.mon(), w.online(), w.deploy('sweet-as-beers')),
     w.on(
       w.week(6),
-      w.tue(),
-      w.all(),
-      w.deploy('todo-full-stack', 'my-fullstack-collection')
+      w.mon(),
+      w.online(),
+      w.deploy('todo-full-stack', 'my-fullstack-collection', 'my-fullstack-collection-scss', 'boilerplate-fullstack', 'boilerplate-fullstack-scss')
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
     w.on(w.week(6), w.tue(), w.welly(), w.deploy('sweet-as-beers-solution')),
     w.on(w.week(6), w.tue(), w.online(), w.deploy('async-redux-stories')),
+    w.on(
+      w.week(6),
+      w.tue(),
+      w.except(w.online()),
+      w.deploy('todo-full-stack', 'my-fullstack-collection', 'my-fullstack-collection-scss')
+    ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
     w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth')),
-    w.on(w.week(6), w.thu(), w.all(), w.deploy('boilerplate-fullstack')),
+    w.on(w.week(6), w.thu(), w.except(w.online()), w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-scss')),
     w.on(w.week(7), w.mon(), w.except(w.online()), w.deploy('jwt-auth'))
   )
 
