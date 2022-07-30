@@ -1,5 +1,5 @@
 import * as Path from 'node:path/posix'
-import createRepo from './github.js'
+import { createRepo } from './github.js'
 
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)

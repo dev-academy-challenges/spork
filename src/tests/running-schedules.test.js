@@ -4,7 +4,7 @@
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
-import jest from 'jest-mock'
+import { jest } from '@jest/globals'
 
 describe('running schedules', () => {
   it('calls the schedule', async () => {

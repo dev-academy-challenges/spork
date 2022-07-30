@@ -1,4 +1,4 @@
-const createRepo = (org, name) => async (infra) => {
+export const createRepo = (org, name) => async (infra) => {
   const { GITHUB_ACCESS_TOKEN, GITHUB_USER } = infra.env()
   const authString = `${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}`
   const authBlob = Buffer.from(authString)
@@ -28,5 +28,3 @@ const createRepo = (org, name) => async (infra) => {
     throw new Error(`Failed to create ${name} in ${org}: ${e.toString()}`)
   }
 }
-
-export default { createRepo }
