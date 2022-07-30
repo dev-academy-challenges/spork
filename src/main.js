@@ -1,15 +1,16 @@
-const dotenv = require('dotenv')
-const Path = require('path/posix')
+import * as dotenv from 'dotenv'
+import * as Path from 'node:path/posix'
 
-const readArgs = require('./read-args')
-const formatDate = require('./format-date')
-const usage = require('./usage')
-const exampleEnv = require('./example-env')
-const runner = require('./runner')
-const createSchedule = require('./schedules/index')
-const PROGRAM_NAME = require('./app-name')
+import readArgs from './read-args.js'
+import formatDate from './format-date.js'
+import usage from './usage.js'
 
-const MONOREPO_NAME = 'challenges'
+import exampleEnv from './example-env.js'
+import runner from './runner.js'
+import createSchedule from './schedules/index.js'
+import PROGRAM_NAME from './app-name.js'
+
+// const MONOREPO_NAME = 'challenges'
 
 const main =
   (...args) =>
@@ -173,4 +174,4 @@ const main =
     })
   }
 
-module.exports = main
+export default main

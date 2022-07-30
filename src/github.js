@@ -29,4 +29,4 @@ const createRepo = (org, name) => async (infra) => {
   }
 }
 
-module.exports = { createRepo }
+export default { createRepo }

@@ -15,4 +15,4 @@ const fakeInfra = () => ({
   post: jest.fn(async () => null),
 })
 
-module.exports = fakeInfra
+export default fakeInfra

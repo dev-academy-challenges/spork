@@ -1,4 +1,5 @@
-const { Transform } = require('stream')
+// const { Transform } = require('stream')
+import { Transform } from 'node:stream'
 
 const timestampStream = (prefix) => {
   let newline_waiting = true
@@ -39,4 +40,4 @@ const timestampStream = (prefix) => {
   })
 }
 
-module.exports = timestampStream
+export default timestampStream

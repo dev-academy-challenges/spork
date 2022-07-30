@@ -1,6 +1,9 @@
-const main = require('../main')
-const APP_NAME = require('../app-name')
-const fakeInfra = require('../infra/fake')
+// const main = require('../main')
+// const APP_NAME = require('../app-name')
+// const fakeInfra = require('../infra/fake')
+import main from '../main.js'
+import APP_NAME from '../app-name.js'
+import fakeInfra from '../infra/fake.js'
 
 describe('Startup', () => {
   it('throws on invalid flags', async () => {

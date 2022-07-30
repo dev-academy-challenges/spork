@@ -1,5 +1,5 @@
-const Path = require('path/posix')
-const { createRepo } = require('./github')
+import * as Path from 'node:path/posix'
+import createRepo from './github.js'
 
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
@@ -20,4 +20,4 @@ const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   )
 }
 
-module.exports = forkToCohort
+export default forkToCohort

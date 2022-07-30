@@ -1,6 +1,8 @@
-const Path = require('path/posix')
+// const Path = require('path/posix')
 
-const forkToCohort = require('./fork-to-cohort')
+// const forkToCohort = require('./fork-to-cohort')
+import * as Path from 'node:path/posix'
+import forkToCohort from './fork-to-cohort.js'
 
 const runner = (cfg, f) => async (eff) => {
   const doit = (date, repos, cohort, queue) => {
@@ -68,4 +70,4 @@ const runner = (cfg, f) => async (eff) => {
   }
 }
 
-module.exports = runner
+export default runner

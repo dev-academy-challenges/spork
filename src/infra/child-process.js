@@ -1,6 +1,6 @@
-const CP = require('child_process')
-const timestampStream = require('./timestamp')
-const censorStream = require('./censor')
+import * as CP from 'node:child_process'
+import timestampStream from './timestamp.js'
+import censorStream from './censor.js'
 
 const spawn = (cwd, name, args, opts) =>
   new Promise((resolve, reject) => {
@@ -32,4 +32,4 @@ const spawn = (cwd, name, args, opts) =>
     })
   })
 
-module.exports = { spawn }
+export { spawn }

@@ -1,4 +1,4 @@
-const https = require('https')
+import * as https from 'node:https'
 
 const post = (args) => {
   const { body, ...options } = args
@@ -20,4 +20,4 @@ const post = (args) => {
   })
 }
 
-module.exports = { post }
+export { post }

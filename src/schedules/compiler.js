@@ -1,4 +1,5 @@
-const APP_NAME = require('../app-name')
+// const APP_NAME = require('../app-name')
+import APP_NAME from '../app-name.js'
 
 const compile = (start, campus, dest, when) =>
   when({
@@ -41,4 +42,4 @@ module.exports = on => {
   ${[].concat(...items).join('\n\n  ')}}\n`,
   })
 
-module.exports = compile
+export default compile

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const main = require('./src/index')
+import main from './src/index.js'
 
 main(...process.argv.slice(2)).catch((err) => {
   process.stderr.write(`${err.toString()}\n`)

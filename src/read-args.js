@@ -61,4 +61,4 @@ const readArgs = (arr) => {
   return flags
 }
 
-module.exports = readArgs
+export default readArgs

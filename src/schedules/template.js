@@ -105,7 +105,14 @@ const template = (w) =>
       w.week(6),
       w.mon(),
       w.online(),
-      w.deploy('redux-zoo', 'todo-full-stack', 'my-fullstack-collection', 'my-fullstack-collection-scss', 'boilerplate-fullstack', 'boilerplate-fullstack-scss')
+      w.deploy(
+        'redux-zoo',
+        'todo-full-stack',
+        'my-fullstack-collection',
+        'my-fullstack-collection-scss',
+        'boilerplate-fullstack',
+        'boilerplate-fullstack-scss'
+      )
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
     w.on(w.week(6), w.tue(), w.welly(), w.deploy('sweet-as-beers-solution')),
@@ -114,13 +121,22 @@ const template = (w) =>
       w.week(6),
       w.tue(),
       w.except(w.online()),
-      w.deploy('todo-full-stack', 'my-fullstack-collection', 'my-fullstack-collection-scss')
+      w.deploy(
+        'todo-full-stack',
+        'my-fullstack-collection',
+        'my-fullstack-collection-scss'
+      )
     ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
     w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth')),
-    w.on(w.week(6), w.thu(), w.except(w.online()), w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-scss')),
+    w.on(
+      w.week(6),
+      w.thu(),
+      w.except(w.online()),
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-scss')
+    ),
     w.on(w.week(7), w.mon(), w.except(w.online()), w.deploy('jwt-auth'))
   )
 
-module.exports = template
+export default template

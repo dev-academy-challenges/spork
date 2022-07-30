@@ -1,1 +1,1 @@
-module.exports = 'spork'
+export default 'spork'

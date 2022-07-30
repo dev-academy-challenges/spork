@@ -1,5 +1,4 @@
-const infra = require('./infra/prod')
-const mainImpl = require('./main')
+import infra from './infra/prod.js'
+import main from './main.js'
 
-const main = (...args) => mainImpl(...args)(infra)
-module.exports = main
+export default (...args) => main(...args)(infra)
