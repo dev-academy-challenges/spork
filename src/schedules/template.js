@@ -1,3 +1,6 @@
+/**
+ * @type {import('./Algebra.js').TTemplate}
+ */
 const template = (w) =>
   w.schedule(
     w.on(

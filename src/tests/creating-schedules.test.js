@@ -95,7 +95,8 @@ describe('creating schedules', () => {
   it(`won't overwrite existing schedule (without --overwrite)`, async () => {
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main(
@@ -122,7 +123,8 @@ describe('creating schedules', () => {
   it(`will overwrite existing schedule (with --overwrite)`, async () => {
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main(

@@ -1,5 +1,10 @@
 import { Transform } from 'node:stream'
 
+/**
+ *
+ * @param {string} forbidden
+ * @returns {Transform}
+ */
 const censorStream = (forbidden) => {
   const stamp = forbidden.replace(/./g, '*')
   return new Transform({

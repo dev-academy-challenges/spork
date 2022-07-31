@@ -1,5 +1,10 @@
 import * as https from 'node:https'
 
+/**
+ *
+ * @param {{ body: string } &  import('node:https').RequestOptions } args
+ * @returns {Promise<void>}
+ */
 const post = (args) => {
   const { body, ...options } = args
 

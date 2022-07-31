@@ -2,6 +2,13 @@ import * as CP from 'node:child_process'
 import timestampStream from './timestamp.js'
 import censorStream from './censor.js'
 
+/**
+ * @param {string} cwd
+ * @param {string} name
+ * @param {string[]} args
+ * @param {{ secret: string }} opts
+ * @returns
+ */
 const spawn = (cwd, name, args, opts) =>
   new Promise((resolve, reject) => {
     const child = CP.spawn(name, args || [], {

@@ -1,3 +1,8 @@
+/**
+ *
+ * @param {string[]} arr
+ * @returns
+ */
 const readArgs = (arr) => {
   let i = 0
   const flags = {}

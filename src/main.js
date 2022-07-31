@@ -11,7 +11,11 @@ import createSchedule from './schedules/index.js'
 import PROGRAM_NAME from './app-name.js'
 
 // const MONOREPO_NAME = 'challenges'
-
+/**
+ *
+ * @param  {...string} args
+ * @returns {import('./infra/Infra.js').Eff<void>}
+ */
 const main =
   (...args) =>
   async (eff) => {
@@ -90,6 +94,7 @@ const main =
       )
       const scheduleJs = createSchedule(
         eff.newDate(flags.startDate),
+        // @ts-ignore
         flags.campus,
         flags.cohortOrg
       )
@@ -137,6 +142,7 @@ const main =
       )
     }
 
+    // @ts-ignore
     const today = eff.newDate()
     const tomorrow = eff.newDate(+today + 24 * 60 * 60 * 1000)
     const targetDate =

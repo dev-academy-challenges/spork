@@ -1,6 +1,3 @@
-// const main = require('../main')
-// const APP_NAME = require('../app-name')
-// const fakeInfra = require('../infra/fake')
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
@@ -12,7 +9,8 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       require: jest.fn(() => schedule),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main()(infra)
@@ -93,7 +91,7 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
       require: jest.fn(() => schedule),
@@ -107,6 +105,7 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
 
     expect(infra.post).not.toHaveBeenCalled()
@@ -133,7 +132,7 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
       require: jest.fn(() => schedule),
@@ -147,6 +146,7 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
   })
 
@@ -160,7 +160,7 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the 1st package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge-1`,
       require: jest.fn(() => schedule),
@@ -174,6 +174,7 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge-1 doesn't exist/)
     expect(infra.post).toHaveBeenCalledTimes(1)
     expect(infra.post).toHaveBeenCalledWith({
@@ -385,7 +386,7 @@ describe('running schedules', () => {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
       env: () => ({ HOME: '~' }),
-      fsReadFile: async (path) => {
+      fsReadFile: async (/** @type {string} */ path) => {
         if (path === `/~/.${APP_NAME}/env`) {
           return Buffer.from(`#!/usr/bin/env bash
 
@@ -398,6 +399,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
       require: jest.fn(() => schedule),
     }
 
+    // @ts-ignore
     await main('-d', '2022-03-14')(infra)
 
     expect(infra.spawn).toHaveBeenCalledWith(

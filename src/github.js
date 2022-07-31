@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {string} org
+ * @param {string} name
+ * @returns {import('./infra/Infra.js').Eff<unknown>}
+ */
 export const createRepo = (org, name) => async (infra) => {
   const { GITHUB_ACCESS_TOKEN, GITHUB_USER } = infra.env()
   const authString = `${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}`
@@ -25,6 +31,7 @@ export const createRepo = (org, name) => async (infra) => {
   try {
     return await infra.post(options)
   } catch (e) {
+    // @ts-ignore
     throw new Error(`Failed to create ${name} in ${org}: ${e.toString()}`)
   }
 }

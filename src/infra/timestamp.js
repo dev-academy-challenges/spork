@@ -1,9 +1,18 @@
 // const { Transform } = require('stream')
 import { Transform } from 'node:stream'
 
+/**
+ *
+ * @param {string} prefix
+ * @returns {Transform}
+ */
 const timestampStream = (prefix) => {
   let newline_waiting = true
 
+  /**
+   * @param {string} str
+   * @returns
+   */
   const stamp = (str) =>
     `[${prefix || ''}${new Date().toLocaleString()}] ${str}`
 

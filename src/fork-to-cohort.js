@@ -1,6 +1,12 @@
 import * as Path from 'node:path/posix'
 import { createRepo } from './github.js'
 
+/**
+ * @param {string} repoPath
+ * @param {string} cohort
+ * @param {string} challengeName
+ * @returns {import('./infra/Infra.js').Eff<void>}
+ */
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
   if (!eff.fsExists(pathToSubtree)) {
