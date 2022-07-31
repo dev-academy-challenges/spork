@@ -144,6 +144,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -171,6 +172,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -194,10 +196,11 @@ describe('Startup', () => {
   it(`loads a schedule if provided`, async () => {
     const infra = {
       ...fakeInfra(),
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main('-s', '~/schedule.js')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith('/~/schedule')
+    expect(infra.import).toHaveBeenCalledWith('/~/schedule.js')
   })
 })

@@ -8,14 +8,14 @@ describe('running schedules', () => {
     const schedule = jest.fn()
     const infra = {
       ...fakeInfra(),
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
       fsExists: (/** @type {string} */ path) =>
         path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main()(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     expect(schedule).toHaveBeenCalled()
   })
 
@@ -28,12 +28,12 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
     expect(infra.post).toHaveBeenCalledWith({
@@ -94,7 +94,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -135,7 +135,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -163,7 +163,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the 1st package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge-1`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -229,12 +229,12 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14', '--dry-run')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     expect(infra.post).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
       expect.any(String),
@@ -260,12 +260,12 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'today')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
     expect(infra.post).toHaveBeenCalledWith({
@@ -324,12 +324,12 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'tomorrow')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
     expect(infra.post).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
@@ -396,7 +396,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
 
         return Buffer.from('')
       },
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     // @ts-ignore
