@@ -30,7 +30,7 @@ export interface IInfra {
   require(path: string): any; // oh, I forgot about how intense this is
   newDate(p: string | number): Date;
   version(): string;
-  post(...args: any[]): Promise<unknown>; 
+  post: typeof import('./https').post
 }
 
 export type Eff<T> = (infra: IInfra) => Promise<T>
