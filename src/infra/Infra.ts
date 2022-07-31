@@ -27,7 +27,7 @@ export interface IInfra {
   fsMkDir(path: string): Promise<void>;
   fsReadFile: ReadFile;
   fsWrite(path: string, data: string,  encoding?: 'utf8',) : Promise<void>;
-  require(path: string): any; // oh, I forgot about how intense this is
+  import(path: string): Promise<any>; // oh, I forgot about how intense this is
   newDate(p: string | number): Date;
   version(): string;
   post: typeof import('./https').post

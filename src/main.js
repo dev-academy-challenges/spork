@@ -160,10 +160,10 @@ const main =
     const schedulePath = Path.resolve(
       eff.cwd(),
       flags.schedule || DEFAULT_SCHEDULE
-    ).replace(/\.js$/, '')
+    )
 
     eff.writeStdout(`Loading schedule from ${schedulePath}\n`)
-    const schedule = eff.require(schedulePath)
+    const schedule = await eff.import(schedulePath)
 
     const cfg = {
       date: formatDate(targetDate),
@@ -173,7 +173,7 @@ const main =
 
     await runner(
       cfg,
-      schedule
+      schedule.default
     )({
       ...eff,
       env: () => ({ ...eff.env(), GITHUB_USER, GITHUB_ACCESS_TOKEN }),

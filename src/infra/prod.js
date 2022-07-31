@@ -24,7 +24,7 @@ export default {
   fsMkDir: (...args) => FS.mkdir(...args),
   fsWrite: (...args) => FS.writeFile(...args),
   fsReadFile: FS.readFile,
-  require: (path) => require(path),
+  import: (path) => import(path),
   newDate: (...args) => new Date(...args),
   version: () => version,
   // @ts-ignore
