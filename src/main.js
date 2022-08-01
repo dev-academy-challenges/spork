@@ -8,6 +8,7 @@ import usage from './usage.js'
 import exampleEnv from './example-env.js'
 import runner from './runner.js'
 import createSchedule from './schedules/index.js'
+import makeLocalClone from './make-local-clone.js'
 import PROGRAM_NAME from './app-name.js'
 
 // const MONOREPO_NAME = 'challenges'
@@ -140,6 +141,12 @@ const main =
           secret: GITHUB_ACCESS_TOKEN,
         }
       )
+    }
+
+    if (flags.makeLocalClone) {
+      await makeLocalClone(flags.makeLocalClone)(eff)
+      eff.writeStdout(`called with --make-local-fork so we're done here\n`)
+      return
     }
 
     // @ts-ignore

@@ -6,7 +6,7 @@ import censorStream from './censor.js'
  * @param {string} cwd
  * @param {string} name
  * @param {string[]} args
- * @param {{ secret: string }} opts
+ * @param {{ secret?: string }} opts
  * @returns
  */
 const spawn = (cwd, name, args, opts) =>

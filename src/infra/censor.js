@@ -2,11 +2,11 @@ import { Transform } from 'node:stream'
 
 /**
  *
- * @param {string} forbidden
+ * @param {string | undefined} forbidden
  * @returns {Transform}
  */
 const censorStream = (forbidden) => {
-  const stamp = forbidden.replace(/./g, '*')
+  const stamp = forbidden && forbidden.replace(/./g, '*')
   return new Transform({
     transform: (chunk, encoding, callback) => {
       if (forbidden) {
