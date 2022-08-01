@@ -33,7 +33,7 @@ const readArgs = (arr) => {
         break
 
       case '--campus':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`value for flag 'campus' not provided`)
         }
 
@@ -41,7 +41,7 @@ const readArgs = (arr) => {
         break
 
       case '--start-date':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`value for flag 'start-date' not provided`)
         }
 
@@ -49,7 +49,7 @@ const readArgs = (arr) => {
         break
 
       case '--cohort-org':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`value for flag 'cohort-org' not provided`)
         }
 
@@ -62,7 +62,7 @@ const readArgs = (arr) => {
 
       case '-s':
       case '--schedule':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`path for flag 'schedule' not provided`)
         }
 
@@ -71,7 +71,7 @@ const readArgs = (arr) => {
 
       case '-d':
       case '--for-date':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`path for flag 'for-date' not provided`)
         }
 
@@ -79,7 +79,7 @@ const readArgs = (arr) => {
         break
 
       case '--make-local-clone':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`path for flag 'make-local-clone' not provided`)
         }
 
@@ -88,7 +88,7 @@ const readArgs = (arr) => {
 
       case '-e':
       case '--event':
-        if (arr[i + 1] == null) {
+        if (arr[i] == null) {
           throw new Error(`path for flag 'event' not provided`)
         }
         flags.event = arr[i++]
