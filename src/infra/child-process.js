@@ -26,12 +26,13 @@ const spawn = (cwd, name, args, opts) =>
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:out) `))
       .pipe(process.stdout)
+
     child.on('exit', (code) => {
       if (code === 0) {
         resolve(null)
         return
       }
-      reject()
+      reject(new Error(`Process ${name} exited with code ${code}`))
     })
 
     child.on('error', (err) => {
