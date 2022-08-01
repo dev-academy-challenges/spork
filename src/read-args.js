@@ -86,6 +86,14 @@ const readArgs = (arr) => {
         flags.makeLocalClone = arr[i++]
         break
 
+      case '-e':
+      case '--event':
+        if (arr[i + 1] == null) {
+          throw new Error(`path for flag 'event' not provided`)
+        }
+        flags.event = arr[i++]
+        break
+
       default:
         throw new Error(`Unknown flag: ${chunk}`)
     }

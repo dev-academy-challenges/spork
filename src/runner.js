@@ -5,8 +5,7 @@ import * as Path from 'node:path/posix'
 import forkToCohort from './fork-to-cohort.js'
 
 /**
- *
- * @param {{ dryRun: boolean, repoPath: string, date: string }} cfg
+ * @param {{ dryRun: boolean, repoPath: string, date: string, event: string | undefined }} cfg
  * @param {(_: (date: string) => { deploy: (...repos: string[]) => ({ to: (cohort: string) => void })}) => void} f
  * @returns {import('./infra/Infra.js').Eff<void>}
  */
@@ -19,7 +18,7 @@ const runner = (cfg, f) => async (eff) => {
    * @param {{ task: () => Promise<unknown>, repo: string }[]} queue
    */
   const doit = (date, repos, cohort, queue) => {
-    if (date === cfg.date) {
+    if (date === cfg.date || date === cfg.event) {
       for (const repo of repos) {
         const task = async () => {
           eff.writeStdout(`deploying ${repo} to ${cohort} \n`)
