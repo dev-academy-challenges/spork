@@ -83,6 +83,69 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
 
+  it('deploys the challenges for a specific event', async () => {
+    const schedule = jest.fn((on) => {
+      on('xmas-eve').deploy('presents').to('children')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: () => true, // the packages must exist in the monorepo
+      import: jest.fn(async () => ({ default: schedule })),
+    }
+
+    await main('-e', 'xmas-eve')(infra)
+
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    expect(infra.post).toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/children/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'presents',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.post).not.toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'tomorrows-challenge',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.spawn).toHaveBeenCalledWith(
+      `/~/.${APP_NAME}/repos/challenges`,
+      'git',
+      [
+        'subtree',
+        'push',
+        `--prefix=packages/presents`,
+        `https://me:_@github.com/children/presents.git`,
+        'main',
+      ],
+      { secret: '_' }
+    )
+    expect(schedule).toHaveBeenCalled()
+  })
   it(`doesn't try to deploy a challenge that doesn't exist in the monorepo`, async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')

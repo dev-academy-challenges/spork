@@ -167,6 +167,7 @@ const main =
 
     const cfg = {
       date: formatDate(targetDate),
+      event: flags.event,
       dryRun: !!flags.dryRun,
       repoPath: MONOREPO_PATH,
     }

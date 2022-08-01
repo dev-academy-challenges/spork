@@ -58,6 +58,11 @@ const readArgs = (arr) => {
         flags.date = arr[i++]
         break
 
+      case '-e':
+      case '--event':
+        flags.event = arr[i++]
+        break
+
       default:
         throw new Error(`Unknown flag: ${chunk}`)
     }
