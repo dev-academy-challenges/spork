@@ -90,7 +90,7 @@ const template = (w) =>
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
     w.on(w.week(6), w.tue(), w.online(), w.deploy('async-redux-stories')),
-    w.on(w.week(6), w.tue(), w.akl(), w.deploy('my-fullstack-collection', 'todo-full-stack')),
+    w.on(w.week(6), w.tue(), w.akl(), w.deploy('my-fullstack-collection', 'my-fullstack-collection-scss', 'todo-full-stack')),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
     w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth')),
