@@ -26,6 +26,19 @@ const compile = (start, campus, dest, when) =>
       (...cs) =>
       (/** @type {string} */ c) =>
         cs.every((f) => !f(c)),
+    when: (event, matchCampus, action) => {
+      if (!matchCampus(campus)) {
+        return []
+      }
+
+      return [
+        `// a special event
+      on(${JSON.stringify(event)})
+      .deploy(${action})
+      .to(${JSON.stringify(dest)})
+    `,
+      ]
+    },
     on: (week, day, matchCampus, act) => {
       if (!matchCampus(campus)) {
         return []

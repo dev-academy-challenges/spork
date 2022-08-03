@@ -20,6 +20,7 @@ export interface IAlgebra<
   except(...ps: TCampusPattern[]): TCampusPattern;
 
   on(week: TWeek, day: TDay, campus: TCampusPattern, action: TAction ): TRule;
+  when(event: string, campus: TCampusPattern, action: TAction): TRule
   deploy(...challenges: string[]): TAction
   schedule(...rules: TRule[]): TResult 
 }
