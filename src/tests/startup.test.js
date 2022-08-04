@@ -36,7 +36,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -h', async () => {
@@ -48,7 +48,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with --version', async () => {
@@ -60,7 +60,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -v', async () => {
@@ -72,7 +72,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits eartly with --init', async () => {
@@ -86,7 +86,7 @@ describe('Startup', () => {
       expect.stringMatching(/called with --init/)
     )
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early if GITHUB_USER is missing', async () => {

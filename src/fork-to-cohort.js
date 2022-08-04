@@ -1,5 +1,5 @@
 import * as Path from 'node:path/posix'
-import { createRepo } from './github.js'
+import { createRepo, setBranchProtection } from './github.js'
 
 /**
  * @param {string} repoPath
@@ -24,6 +24,8 @@ const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
     ['subtree', 'push', `--prefix=packages/${challengeName}`, url, `main`],
     { secret: GITHUB_ACCESS_TOKEN }
   )
+
+  await setBranchProtection(cohort, challengeName)(eff)
 }
 
 export default forkToCohort

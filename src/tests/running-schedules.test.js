@@ -36,7 +36,7 @@ describe('running schedules', () => {
     expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -52,7 +52,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -83,6 +83,47 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
 
+  it('sets branch protections for the main branch', async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: () => true, // the packages must exist in the monorepo
+      import: jest.fn(async () => ({ default: schedule })),
+    }
+
+    await main('-d', '2022-03-14')(infra)
+
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    // Set branch protections
+    expect(infra.request).toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/repos/my-cohort-org/todays-challenge/branches/main/protection`,
+      port: 443,
+      method: 'PUT',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        required_status_checks: null,
+        enforce_admins: true,
+        required_pull_request_reviews: {
+          dismissal_restrictions: {},
+          dismiss_stale_reviews: true,
+          require_code_owner_reviews: false,
+          required_approving_review_count: 1,
+        },
+        restrictions: null,
+      }),
+    })
+  })
+
   it('deploys the challenges for a specific event', async () => {
     const schedule = jest.fn((on) => {
       on('xmas-eve').deploy('presents').to('children')
@@ -100,7 +141,7 @@ describe('running schedules', () => {
     expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/children/repos`,
       port: 443,
@@ -116,7 +157,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -171,7 +212,7 @@ describe('running schedules', () => {
     // @ts-ignore
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
 
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
@@ -239,8 +280,7 @@ describe('running schedules', () => {
     expect(err).not.toBeNull()
     // @ts-ignore
     expect(err.message).toMatch(/todays-challenge-1 doesn't exist/)
-    expect(infra.post).toHaveBeenCalledTimes(1)
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       body: JSON.stringify({
         name: 'todays-challenge-2',
         visibility: 'internal',
@@ -298,7 +338,7 @@ describe('running schedules', () => {
     await main('-d', '2022-03-14', '--dry-run')(infra)
 
     expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
       expect.any(String),
       'git',
@@ -331,7 +371,7 @@ describe('running schedules', () => {
     expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -347,7 +387,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -394,7 +434,7 @@ describe('running schedules', () => {
 
     expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -410,7 +450,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -479,7 +519,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
     )
 
     const basicAuth = Buffer.from('peter:gh_peters_token').toString('base64')
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
