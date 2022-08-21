@@ -55,14 +55,14 @@ const template = (w) =>
       w.welly(),
       w.deploy('knex-joins-stories-solution')
     ),
-    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram')),
+    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram', 'lightning-talks')),
     w.on(w.week(3), w.wed(), w.welly(), w.deploy('knex-relationships-stories')),
     w.on(w.week(3), w.wed(), w.except(w.welly()), w.deploy('dreamfest')),
     w.on(
       w.week(3),
       w.thu(),
       w.all(),
-      w.deploy('lightning-talks', 'boilerplate-knex')
+      w.deploy('boilerplate-knex')
     ),
     w.on(
       w.week(4),
