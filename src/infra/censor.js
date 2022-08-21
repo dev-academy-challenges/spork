@@ -1,7 +1,12 @@
-const { Transform } = require('stream')
+import { Transform } from 'node:stream'
 
+/**
+ *
+ * @param {string | undefined} forbidden
+ * @returns {Transform}
+ */
 const censorStream = (forbidden) => {
-  const stamp = forbidden.replace(/./g, '*')
+  const stamp = forbidden && forbidden.replace(/./g, '*')
   return new Transform({
     transform: (chunk, encoding, callback) => {
       if (forbidden) {
@@ -12,4 +17,5 @@ const censorStream = (forbidden) => {
     },
   })
 }
-module.exports = censorStream
+
+export default censorStream

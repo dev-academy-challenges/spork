@@ -1,21 +1,25 @@
-const FS = require('fs').promises
-const { existsSync: fsExists } = require('fs')
+import * as FS from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { spawn } from './child-process.js'
+import { request } from './https.js'
 
-const { spawn } = require('./child-process')
-const { version } = require('../../package.json')
-const { post } = require('./https')
-
-module.exports = {
+const version = '1.0.0'
+/**
+ * @type {import('./Infra').IInfra}
+ */
+export default {
   writeStdout: (str) => process.stdout.write(str),
   env: () => process.env,
+  // @ts-ignore
   spawn: (...args) => spawn(...args),
   cwd: () => process.cwd(),
-  fsExists: (...args) => fsExists(...args),
+  fsExists: (...args) => existsSync(...args),
   fsMkDir: (...args) => FS.mkdir(...args),
   fsWrite: (...args) => FS.writeFile(...args),
-  fsReadFile: (...args) => FS.readFile(...args),
-  require: (path) => require(path),
+  fsReadFile: FS.readFile,
+  import: (path) => import(path),
   newDate: (...args) => new Date(...args),
   version: () => version,
-  post: (...args) => post(...args),
+  // @ts-ignore
+  request: (...args) => request(...args),
 }

@@ -1,6 +1,9 @@
-const main = require('../main')
-const APP_NAME = require('../app-name')
-const fakeInfra = require('../infra/fake')
+// const main = require('../main')
+// const APP_NAME = require('../app-name')
+// const fakeInfra = require('../infra/fake')
+import main from '../main.js'
+import APP_NAME from '../app-name.js'
+import fakeInfra from '../infra/fake.js'
 
 describe('creating schedules', () => {
   it('throws unless the correct parameters are provided', async () => {
@@ -92,7 +95,8 @@ describe('creating schedules', () => {
   it(`won't overwrite existing schedule (without --overwrite)`, async () => {
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main(
@@ -119,7 +123,8 @@ describe('creating schedules', () => {
   it(`will overwrite existing schedule (with --overwrite)`, async () => {
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main(

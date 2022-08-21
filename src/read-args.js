@@ -1,3 +1,8 @@
+/**
+ *
+ * @param {string[]} arr
+ * @returns
+ */
 const readArgs = (arr) => {
   let i = 0
   const flags = {}
@@ -28,14 +33,26 @@ const readArgs = (arr) => {
         break
 
       case '--campus':
+        if (arr[i] == null) {
+          throw new Error(`value for flag 'campus' not provided`)
+        }
+
         flags.campus = arr[i++]
         break
 
       case '--start-date':
+        if (arr[i] == null) {
+          throw new Error(`value for flag 'start-date' not provided`)
+        }
+
         flags.startDate = arr[i++]
         break
 
       case '--cohort-org':
+        if (arr[i] == null) {
+          throw new Error(`value for flag 'cohort-org' not provided`)
+        }
+
         flags.cohortOrg = arr[i++]
         break
 
@@ -45,12 +62,36 @@ const readArgs = (arr) => {
 
       case '-s':
       case '--schedule':
+        if (arr[i] == null) {
+          throw new Error(`path for flag 'schedule' not provided`)
+        }
+
         flags.schedule = arr[i++]
         break
 
       case '-d':
       case '--for-date':
+        if (arr[i] == null) {
+          throw new Error(`path for flag 'for-date' not provided`)
+        }
+
         flags.date = arr[i++]
+        break
+
+      case '--make-local-clone':
+        if (arr[i] == null) {
+          throw new Error(`path for flag 'make-local-clone' not provided`)
+        }
+
+        flags.makeLocalClone = arr[i++]
+        break
+
+      case '-e':
+      case '--event':
+        if (arr[i] == null) {
+          throw new Error(`path for flag 'event' not provided`)
+        }
+        flags.event = arr[i++]
         break
 
       default:
@@ -61,4 +102,4 @@ const readArgs = (arr) => {
   return flags
 }
 
-module.exports = readArgs
+export default readArgs

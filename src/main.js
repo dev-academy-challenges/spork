@@ -1,16 +1,22 @@
-const dotenv = require('dotenv')
-const Path = require('path/posix')
+import * as dotenv from 'dotenv'
+import * as Path from 'node:path/posix'
 
-const readArgs = require('./read-args')
-const formatDate = require('./format-date')
-const usage = require('./usage')
-const exampleEnv = require('./example-env')
-const runner = require('./runner')
-const createSchedule = require('./schedules/index')
-const PROGRAM_NAME = require('./app-name')
+import readArgs from './read-args.js'
+import formatDate from './format-date.js'
+import usage from './usage.js'
 
-const MONOREPO_NAME = 'challenges'
+import exampleEnv from './example-env.js'
+import runner from './runner.js'
+import createSchedule from './schedules/index.js'
+import makeLocalClone from './make-local-clone.js'
+import PROGRAM_NAME from './app-name.js'
 
+// const MONOREPO_NAME = 'challenges'
+/**
+ *
+ * @param  {...string} args
+ * @returns {import('./infra/Infra.js').Eff<void>}
+ */
 const main =
   (...args) =>
   async (eff) => {
@@ -89,6 +95,7 @@ const main =
       )
       const scheduleJs = createSchedule(
         eff.newDate(flags.startDate),
+        // @ts-ignore
         flags.campus,
         flags.cohortOrg
       )
@@ -136,6 +143,13 @@ const main =
       )
     }
 
+    if (flags.makeLocalClone) {
+      await makeLocalClone(flags.makeLocalClone)(eff)
+      eff.writeStdout(`called with --make-local-fork so we're done here\n`)
+      return
+    }
+
+    // @ts-ignore
     const today = eff.newDate()
     const tomorrow = eff.newDate(+today + 24 * 60 * 60 * 1000)
     const targetDate =
@@ -153,24 +167,25 @@ const main =
     const schedulePath = Path.resolve(
       eff.cwd(),
       flags.schedule || DEFAULT_SCHEDULE
-    ).replace(/\.js$/, '')
+    )
 
     eff.writeStdout(`Loading schedule from ${schedulePath}\n`)
-    const schedule = eff.require(schedulePath)
+    const schedule = await eff.import(schedulePath)
 
     const cfg = {
       date: formatDate(targetDate),
+      event: flags.event,
       dryRun: !!flags.dryRun,
       repoPath: MONOREPO_PATH,
     }
 
     await runner(
       cfg,
-      schedule
+      schedule.default
     )({
       ...eff,
       env: () => ({ ...eff.env(), GITHUB_USER, GITHUB_ACCESS_TOKEN }),
     })
   }
 
-module.exports = main
+export default main

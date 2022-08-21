@@ -1,7 +1,14 @@
-const CP = require('child_process')
-const timestampStream = require('./timestamp')
-const censorStream = require('./censor')
+import * as CP from 'node:child_process'
+import timestampStream from './timestamp.js'
+import censorStream from './censor.js'
 
+/**
+ * @param {string} cwd
+ * @param {string} name
+ * @param {string[]} args
+ * @param {{ secret?: string }} opts
+ * @returns
+ */
 const spawn = (cwd, name, args, opts) =>
   new Promise((resolve, reject) => {
     const child = CP.spawn(name, args || [], {
@@ -19,12 +26,13 @@ const spawn = (cwd, name, args, opts) =>
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:out) `))
       .pipe(process.stdout)
+
     child.on('exit', (code) => {
       if (code === 0) {
         resolve(null)
         return
       }
-      reject()
+      reject(new Error(`Process ${name} exited with code ${code}`))
     })
 
     child.on('error', (err) => {
@@ -32,4 +40,4 @@ const spawn = (cwd, name, args, opts) =>
     })
   })
 
-module.exports = { spawn }
+export { spawn }

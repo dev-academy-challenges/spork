@@ -1,19 +1,21 @@
-const main = require('../main')
-const APP_NAME = require('../app-name')
-const fakeInfra = require('../infra/fake')
+import main from '../main.js'
+import APP_NAME from '../app-name.js'
+import fakeInfra from '../infra/fake.js'
+import { jest } from '@jest/globals'
 
 describe('running schedules', () => {
   it('calls the schedule', async () => {
     const schedule = jest.fn()
     const infra = {
       ...fakeInfra(),
-      require: jest.fn(() => schedule),
-      fsExists: (path) => path === `/~/.${APP_NAME}/schedule.js`,
+      import: jest.fn(async () => ({ default: schedule })),
+      fsExists: (/** @type {string} */ path) =>
+        path === `/~/.${APP_NAME}/schedule.js`,
     }
 
     await main()(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     expect(schedule).toHaveBeenCalled()
   })
 
@@ -26,15 +28,15 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -50,7 +52,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -81,6 +83,110 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
 
+  it('sets branch protections for the main branch', async () => {
+    const schedule = jest.fn((on) => {
+      on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: () => true, // the packages must exist in the monorepo
+      import: jest.fn(async () => ({ default: schedule })),
+    }
+
+    await main('-d', '2022-03-14')(infra)
+
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    // Set branch protections
+    expect(infra.request).toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/repos/my-cohort-org/todays-challenge/branches/main/protection`,
+      port: 443,
+      method: 'PUT',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        required_status_checks: null,
+        enforce_admins: true,
+        required_pull_request_reviews: {
+          dismissal_restrictions: {},
+          dismiss_stale_reviews: true,
+          require_code_owner_reviews: false,
+          required_approving_review_count: 1,
+        },
+        restrictions: null,
+      }),
+    })
+  })
+
+  it('deploys the challenges for a specific event', async () => {
+    const schedule = jest.fn((on) => {
+      on('xmas-eve').deploy('presents').to('children')
+      on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
+    })
+
+    const infra = {
+      ...fakeInfra(),
+      fsExists: () => true, // the packages must exist in the monorepo
+      import: jest.fn(async () => ({ default: schedule })),
+    }
+
+    await main('-e', 'xmas-eve')(infra)
+
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
+    const basicAuth = Buffer.from('me:_').toString('base64')
+
+    expect(infra.request).toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/children/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'presents',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.request).not.toHaveBeenCalledWith({
+      hostname: 'api.github.com',
+      path: `/orgs/my-cohort-org/repos`,
+      port: 443,
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        'User-Agent': 'fork-to-cohort',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'tomorrows-challenge',
+        visibility: 'internal',
+      }),
+    })
+
+    expect(infra.spawn).toHaveBeenCalledWith(
+      `/~/.${APP_NAME}/repos/challenges`,
+      'git',
+      [
+        'subtree',
+        'push',
+        `--prefix=packages/presents`,
+        `https://me:_@github.com/children/presents.git`,
+        'main',
+      ],
+      { secret: '_' }
+    )
+    expect(schedule).toHaveBeenCalled()
+  })
   it(`doesn't try to deploy a challenge that doesn't exist in the monorepo`, async () => {
     const schedule = jest.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
@@ -89,10 +195,10 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -103,9 +209,10 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
 
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
@@ -129,10 +236,10 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -143,6 +250,7 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge doesn't exist/)
   })
 
@@ -156,10 +264,10 @@ describe('running schedules', () => {
 
     const infra = {
       ...fakeInfra(),
-      fsExists: (path) =>
+      fsExists: (/** @type {string} */ path) =>
         // the 1st package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge-1`,
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -170,9 +278,9 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/todays-challenge-1 doesn't exist/)
-    expect(infra.post).toHaveBeenCalledTimes(1)
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       body: JSON.stringify({
         name: 'todays-challenge-2',
         visibility: 'internal',
@@ -224,13 +332,13 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14', '--dry-run')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
+    expect(infra.request).not.toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalledWith(
       expect.any(String),
       'git',
@@ -255,15 +363,15 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'today')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -279,7 +387,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -319,14 +427,14 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'tomorrow')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule`)
+    expect(infra.import).toHaveBeenCalledWith(`/~/.${APP_NAME}/schedule.js`)
     const basicAuth = Buffer.from('me:_').toString('base64')
-    expect(infra.post).not.toHaveBeenCalledWith({
+    expect(infra.request).not.toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -342,7 +450,7 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,
@@ -381,7 +489,7 @@ describe('running schedules', () => {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
       env: () => ({ HOME: '~' }),
-      fsReadFile: async (path) => {
+      fsReadFile: async (/** @type {string} */ path) => {
         if (path === `/~/.${APP_NAME}/env`) {
           return Buffer.from(`#!/usr/bin/env bash
 
@@ -391,9 +499,10 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
 
         return Buffer.from('')
       },
-      require: jest.fn(() => schedule),
+      import: jest.fn(async () => ({ default: schedule })),
     }
 
+    // @ts-ignore
     await main('-d', '2022-03-14')(infra)
 
     expect(infra.spawn).toHaveBeenCalledWith(
@@ -410,7 +519,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
     )
 
     const basicAuth = Buffer.from('peter:gh_peters_token').toString('base64')
-    expect(infra.post).toHaveBeenCalledWith({
+    expect(infra.request).toHaveBeenCalledWith({
       hostname: 'api.github.com',
       path: `/orgs/my-cohort-org/repos`,
       port: 443,

@@ -1,6 +1,6 @@
-const main = require('../main')
-const APP_NAME = require('../app-name')
-const fakeInfra = require('../infra/fake')
+import main from '../main.js'
+import APP_NAME from '../app-name.js'
+import fakeInfra from '../infra/fake.js'
 
 describe('Startup', () => {
   it('throws on invalid flags', async () => {
@@ -36,7 +36,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -h', async () => {
@@ -48,7 +48,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalled()
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with --version', async () => {
@@ -60,7 +60,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -v', async () => {
@@ -72,7 +72,7 @@ describe('Startup', () => {
 
     expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits eartly with --init', async () => {
@@ -86,7 +86,7 @@ describe('Startup', () => {
       expect.stringMatching(/called with --init/)
     )
     expect(infra.spawn).not.toHaveBeenCalled()
-    expect(infra.post).not.toHaveBeenCalled()
+    expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early if GITHUB_USER is missing', async () => {
@@ -103,6 +103,7 @@ describe('Startup', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/GITHUB_USER is undefined/)
   })
 
@@ -120,6 +121,7 @@ describe('Startup', () => {
     }
 
     expect(err).not.toBeNull()
+    // @ts-ignore
     expect(err.message).toMatch(/GITHUB_ACCESS_TOKEN is undefined/)
   })
 
@@ -142,6 +144,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -169,6 +172,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -192,10 +196,11 @@ describe('Startup', () => {
   it(`loads a schedule if provided`, async () => {
     const infra = {
       ...fakeInfra(),
+      import: jest.fn(async () => ({ default: () => {} })),
     }
 
     await main('-s', '~/schedule.js')(infra)
 
-    expect(infra.require).toHaveBeenCalledWith('/~/schedule')
+    expect(infra.import).toHaveBeenCalledWith('/~/schedule.js')
   })
 })

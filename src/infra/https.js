@@ -1,11 +1,16 @@
-const https = require('https')
+import * as https from 'node:https'
 
-const post = (args) => {
+/**
+ *
+ * @param {{ body: string } &  import('node:https').RequestOptions } args
+ * @returns {Promise<void>}
+ */
+const request = (args) => {
   const { body, ...options } = args
 
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
-      if (res.statusCode === 201) {
+      if (res.statusCode === 201 || res.statusCode === 200) {
         resolve()
       } else {
         reject(res.statusCode)
@@ -20,4 +25,4 @@ const post = (args) => {
   })
 }
 
-module.exports = { post }
+export { request }

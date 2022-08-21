@@ -1,6 +1,7 @@
-const APP_NAME = require('./app-name')
+// const APP_NAME = require('./app-name')
+import APP_NAME from './app-name.js'
 
-module.exports = `usage: ${APP_NAME} <options>
+export default `usage: ${APP_NAME} <options>
 
 Deploy EDA challenges to their cohort orgs on a schedule
 

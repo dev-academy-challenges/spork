@@ -1,6 +1,12 @@
-const Path = require('path/posix')
-const { createRepo } = require('./github')
+import * as Path from 'node:path/posix'
+import { createRepo, setBranchProtection } from './github.js'
 
+/**
+ * @param {string} repoPath
+ * @param {string} cohort
+ * @param {string} challengeName
+ * @returns {import('./infra/Infra.js').Eff<void>}
+ */
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
   if (!eff.fsExists(pathToSubtree)) {
@@ -18,6 +24,8 @@ const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
     ['subtree', 'push', `--prefix=packages/${challengeName}`, url, `main`],
     { secret: GITHUB_ACCESS_TOKEN }
   )
+
+  await setBranchProtection(cohort, challengeName)(eff)
 }
 
-module.exports = forkToCohort
+export default forkToCohort

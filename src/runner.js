@@ -1,10 +1,24 @@
-const Path = require('path/posix')
+// const Path = require('path/posix')
 
-const forkToCohort = require('./fork-to-cohort')
+// const forkToCohort = require('./fork-to-cohort')
+import * as Path from 'node:path/posix'
+import forkToCohort from './fork-to-cohort.js'
 
+/**
+ * @param {{ dryRun: boolean, repoPath: string, date: string, event: string | undefined }} cfg
+ * @param {(_: (date: string) => { deploy: (...repos: string[]) => ({ to: (cohort: string) => void })}) => void} f
+ * @returns {import('./infra/Infra.js').Eff<void>}
+ */
 const runner = (cfg, f) => async (eff) => {
+  /**
+   *
+   * @param {string} date
+   * @param {string[]} repos
+   * @param {string} cohort
+   * @param {{ task: () => Promise<unknown>, repo: string }[]} queue
+   */
   const doit = (date, repos, cohort, queue) => {
-    if (date === cfg.date) {
+    if (date === cfg.date || date === cfg.event) {
       for (const repo of repos) {
         const task = async () => {
           eff.writeStdout(`deploying ${repo} to ${cohort} \n`)
@@ -23,6 +37,9 @@ const runner = (cfg, f) => async (eff) => {
     }
   }
 
+  /**
+   * @type {{ task: () => Promise<unknown>, repo: string }[]}
+   */
   const queue = []
   // `f` should look something like this, so this weird object is
   // to unwrap that fancy syntax:
@@ -36,6 +53,11 @@ const runner = (cfg, f) => async (eff) => {
   //       .to('some-cohort-name')
   //   }
   //
+  /**
+   *
+   * @param {string} date
+   * @returns {{ deploy: (...repos: string[]) => ({ to: (cohort: string) => void })}}
+   */
   const on = (date) => ({
     deploy: (...repos) => ({
       to: (cohort) => {
@@ -56,6 +78,7 @@ const runner = (cfg, f) => async (eff) => {
   }
 
   for (const { repo, error } of failures) {
+    // @ts-ignore
     eff.writeStdout(`deploying ${repo} failed with ${error.message}\n`)
   }
 
@@ -68,4 +91,4 @@ const runner = (cfg, f) => async (eff) => {
   }
 }
 
-module.exports = runner
+export default runner
