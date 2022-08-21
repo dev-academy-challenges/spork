@@ -50,12 +50,12 @@ const template = (w) =>
     w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
-    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram', 'dreamfest')),
+    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram', 'dreamfest', 'lightning-talks')),
     w.on(
       w.week(3),
       w.thu(),
       w.all(),
-      w.deploy('lightning-talks', 'boilerplate-knex')
+      w.deploy('boilerplate-knex')
     ),
     w.on(
       w.week(4),
