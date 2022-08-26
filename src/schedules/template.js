@@ -70,10 +70,11 @@ const template = (w) =>
       w.deploy('broken-kaleidoscope', 'memory', 'enspiraled')
     ),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
-    w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-webpack')),
+    w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
     w.on(w.week(5), w.wed(), w.all(), w.deploy('consuming-external-apis')),
+    w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-react-api')),
     w.on(w.week(6), w.mon(), w.except(w.online()), w.deploy('redux-minimal')),
     w.on(
       w.week(6),
