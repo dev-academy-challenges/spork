@@ -98,9 +98,9 @@ That should be everything you need for day-to-day use of spork.
 
 # Refreshing recently-updated challenges
 
-Spork gets the challenges from [monorepo-trial](https://github.com/dev-academy-challenges/monorepo-trial), so if a challenge gets updated in [dev-academy-challenges](https://github.com/dev-academy-challenges) you need to refresh monorepo-trial with the latest version of the challenge before using spork to push the challenge to a cohort org.
+Spork gets the challenges from [dev-academy-challenges/challenges](https://github.com/dev-academy-challenges/challenges), so if a challenge gets updated in [dev-academy-challenges](https://github.com/dev-academy-challenges) you need to refresh the challenges monorepo with the latest version of the challenge before using spork to push the challenge to a cohort org.
 
-First clone down [monorepo-trial](https://github.com/dev-academy-challenges/monorepo-trial) if you haven't already. Then from the `main` branch of your local copy of monorepo-trial:
+First clone down [dev-academy-challenges/challenges](https://github.com/dev-academy-challenges/challenges) if you haven't already. Then from the `main` branch of your local copy of the challenges monorepo:
 
 ```sh
 git pull
