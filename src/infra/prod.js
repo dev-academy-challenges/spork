@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs'
 import { spawn } from './child-process.js'
 import { request } from './https.js'
 
-const version = '1.0.0'
 /**
  * @type {import('./Infra').IInfra}
  */
@@ -19,7 +18,6 @@ export default {
   fsReadFile: FS.readFile,
   import: (path) => import(path),
   newDate: (...args) => new Date(...args),
-  version: () => version,
   // @ts-ignore
   request: (...args) => request(...args),
 }

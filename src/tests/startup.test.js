@@ -1,5 +1,6 @@
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
+import version from '../app-version.js'
 import fakeInfra from '../infra/fake.js'
 
 describe('Startup', () => {
@@ -58,7 +59,7 @@ describe('Startup', () => {
 
     await main('--version')(infra)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v${version}\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
@@ -70,7 +71,7 @@ describe('Startup', () => {
 
     await main('-v')(infra)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v1.0.0\n`)
+    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v${version}\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })

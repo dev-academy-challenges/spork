@@ -15,7 +15,6 @@ const fakeInfra = () => ({
   newDate: (...args) =>
     // @ts-ignore
     args.length === 0 ? new Date(448502400000) : new Date(...args),
-  version: () => '1.0.0',
   request: jest.fn(async () => {}),
 })
 
