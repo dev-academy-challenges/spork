@@ -145,7 +145,7 @@ const main =
     }
 
     if (flags.makeLocalClone) {
-      await makeLocalClone(flags.makeLocalClone)(eff)
+      await makeLocalClone(flags.makeLocalClone, flags.branch)(eff)
       eff.writeStdout(`called with --make-local-fork so we're done here\n`)
       return
     }
