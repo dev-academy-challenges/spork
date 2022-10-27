@@ -86,6 +86,14 @@ const readArgs = (arr) => {
         flags.makeLocalClone = arr[i++]
         break
 
+      case '--branch':
+        if (arr[i] == null) {
+          throw new Error(`path for flag 'branch' not provided`)
+        }
+
+        flags.branch = arr[i++]
+        break
+
       case '-e':
       case '--event':
         if (arr[i] == null) {

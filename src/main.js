@@ -10,6 +10,7 @@ import runner from './runner.js'
 import createSchedule from './schedules/index.js'
 import makeLocalClone from './make-local-clone.js'
 import PROGRAM_NAME from './app-name.js'
+import version from './app-version.js'
 
 // const MONOREPO_NAME = 'challenges'
 /**
@@ -29,7 +30,7 @@ const main =
     }
 
     if (flags.version) {
-      eff.writeStdout(`${PROGRAM_NAME} v${eff.version()}\n`)
+      eff.writeStdout(`${PROGRAM_NAME} v${version}\n`)
       return
     }
 
@@ -144,7 +145,7 @@ const main =
     }
 
     if (flags.makeLocalClone) {
-      await makeLocalClone(flags.makeLocalClone)(eff)
+      await makeLocalClone(flags.makeLocalClone, flags.branch)(eff)
       eff.writeStdout(`called with --make-local-fork so we're done here\n`)
       return
     }
