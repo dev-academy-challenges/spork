@@ -16,7 +16,9 @@ export default (challenge, branch = 'main') =>
     const challengesPath = Path.join(SPORK_DIRECTORY, 'repos', 'challenges')
     try {
       if (branch !== 'main') {
-        await eff.spawn(challengesPath, 'git', ['fetch', 'origin'], {})
+        const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = env
+        const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
+        await eff.spawn(challengesPath, 'git', ['fetch', MONOREPO_URL], {})
         await eff.spawn(challengesPath, 'git', ['checkout', branch], {})
         await eff.spawn(challengesPath, 'git', [
           'pull',

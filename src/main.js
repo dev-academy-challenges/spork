@@ -145,7 +145,13 @@ const main =
     }
 
     if (flags.makeLocalClone) {
-      await makeLocalClone(flags.makeLocalClone, flags.branch)(eff)
+      await makeLocalClone(
+        flags.makeLocalClone,
+        flags.branch
+      )({
+        ...eff,
+        env: () => ({ ...env, GITHUB_USER, GITHUB_ACCESS_TOKEN }),
+      })
       eff.writeStdout(`called with --make-local-fork so we're done here\n`)
       return
     }
