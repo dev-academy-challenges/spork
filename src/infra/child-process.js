@@ -3,13 +3,14 @@ import timestampStream from './timestamp.js'
 import censorStream from './censor.js'
 
 /**
+ * @param {{stdout: import('node:stream').Writable, stderr: import('node:stream').Writable}} streams
  * @param {string} cwd
  * @param {string} name
  * @param {string[]} args
- * @param {{ secret?: string }} opts
+ * @param {{ secret?: string}} opts
  * @returns
  */
-const spawn = (cwd, name, args, opts) =>
+export const spawn = (streams, cwd, name, args, opts) =>
   new Promise((resolve, reject) => {
     const child = CP.spawn(name, args || [], {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -20,12 +21,12 @@ const spawn = (cwd, name, args, opts) =>
     child.stderr
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:err) `))
-      .pipe(process.stdout)
+      .pipe(streams.stderr)
 
     child.stdout
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:out) `))
-      .pipe(process.stdout)
+      .pipe(streams.stdout)
 
     child.on('exit', (code) => {
       if (code === 0) {
@@ -39,5 +40,3 @@ const spawn = (cwd, name, args, opts) =>
       reject(err)
     })
   })
-
-export { spawn }

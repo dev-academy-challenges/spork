@@ -13,13 +13,14 @@
 //   post: (...args) => post(...args),
 // }
 
+import type { Duplex } from 'node:stream'
+
 type ReadFile = {
   (path: string): Promise<Buffer>
   (path: string, encoding: 'utf8'): Promise<string>
 }
 
 export interface IInfra {
-  writeStdout(message: string): void
   env(): Record<string, string | undefined>
   spawn(...args: any[]): Promise<void>
   cwd(): string
@@ -30,6 +31,8 @@ export interface IInfra {
   import(path: string): Promise<any> // oh, I forgot about how intense this is
   newDate(p: string | number): Date
   request: typeof import('./https').request
+  stdout: Duplex
+  stderr: Duplex
 }
 
 export type Eff<T> = (infra: IInfra) => Promise<T>

@@ -8,7 +8,7 @@ import PROGRAM_NAME from './app-name.js'
 export default (challenge, branch = 'main') =>
   async (eff) => {
     const env = eff.env()
-    eff.writeStdout(`Making a local clone of ${challenge}\n`)
+    eff.stdout.write(`Making a local clone of ${challenge}\n`)
     const SPORK_DIRECTORY = Path.resolve(
       eff.cwd(),
       env.SPORK_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`

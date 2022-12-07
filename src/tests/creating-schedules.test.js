@@ -4,6 +4,7 @@
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
+import { readTilEnd } from './utils.js'
 
 describe('creating schedules', () => {
   it('throws unless the correct parameters are provided', async () => {
@@ -109,7 +110,8 @@ describe('creating schedules', () => {
       '2022-03-14'
     )(infra)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(
+    const output = await readTilEnd(infra.stdout)
+    expect(output).toEqual(
       expect.stringMatching(/File exists at .*, not overwriting/)
     )
 
@@ -137,8 +139,9 @@ describe('creating schedules', () => {
       '2022-03-14',
       '--overwrite'
     )(infra)
+    const output = await readTilEnd(infra.stdout)
 
-    expect(infra.writeStdout).not.toHaveBeenCalledWith(
+    expect(output).not.toEqual(
       expect.stringMatching(/File exists at .*, not overwriting/)
     )
 

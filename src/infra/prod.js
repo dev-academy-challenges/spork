@@ -7,10 +7,10 @@ import { request } from './https.js'
  * @type {import('./Infra').IInfra}
  */
 export default {
-  writeStdout: (str) => process.stdout.write(str),
   env: () => process.env,
-  // @ts-ignore
-  spawn: (...args) => spawn(...args),
+  spawn: (...args) =>
+    // @ts-ignore
+    spawn({ stdout: process.stdout, stderr: process.stdout }, ...args),
   cwd: () => process.cwd(),
   fsExists: (...args) => existsSync(...args),
   fsMkDir: (...args) => FS.mkdir(...args),
@@ -20,4 +20,6 @@ export default {
   newDate: (...args) => new Date(...args),
   // @ts-ignore
   request: (...args) => request(...args),
+  stdout: process.stdout,
+  stderr: process.stderr,
 }

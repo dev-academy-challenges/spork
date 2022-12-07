@@ -21,7 +21,7 @@ const runner = (cfg, f) => async (eff) => {
     if (date === cfg.date || date === cfg.event) {
       for (const repo of repos) {
         const task = async () => {
-          eff.writeStdout(`deploying ${repo} to ${cohort} \n`)
+          eff.stdout.write(`deploying ${repo} to ${cohort} \n`)
           const pathToSubtree = Path.join(cfg.repoPath, 'packages', repo)
           if (!eff.fsExists(pathToSubtree)) {
             throw new Error(`${repo} doesn't exist in monorepo`)
@@ -79,7 +79,7 @@ const runner = (cfg, f) => async (eff) => {
 
   for (const { repo, error } of failures) {
     // @ts-ignore
-    eff.writeStdout(`deploying ${repo} failed with ${error.message}\n`)
+    eff.stdout.write(`deploying ${repo} failed with ${error.message}\n`)
   }
 
   if (failures.length === 1) {

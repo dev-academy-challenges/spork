@@ -2,6 +2,7 @@ import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import version from '../app-version.js'
 import fakeInfra from '../infra/fake.js'
+import { readTilEnd } from './utils'
 
 describe('Startup', () => {
   it('throws on invalid flags', async () => {
@@ -20,72 +21,63 @@ describe('Startup', () => {
   })
 
   it('logs startup message immediately', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main()(infra)
-    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} running...\n`)
+    const output = await readTilEnd(infra.stdout)
+
+    expect(output).toContain(`${APP_NAME} running...\n`)
   })
 
   it('exits early with --help', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main('--help')(infra)
+    const output = await readTilEnd(infra.stdout)
 
-    expect(infra.writeStdout).toHaveBeenCalled()
+    expect(output).not.toBe('')
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -h', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main('-h')(infra)
-
-    expect(infra.writeStdout).toHaveBeenCalled()
+    const output = await readTilEnd(infra.stdout)
+    expect(output).not.toBe('')
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with --version', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main('--version')(infra)
+    const output = await readTilEnd(infra.stdout)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v${version}\n`)
+    expect(output).toBe(`${APP_NAME} v${version}\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits early with -v', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main('-v')(infra)
-
-    expect(infra.writeStdout).toHaveBeenCalledWith(`${APP_NAME} v${version}\n`)
+    const output = await readTilEnd(infra.stdout)
+    expect(output).toBe(`${APP_NAME} v${version}\n`)
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
 
   it('exits eartly with --init', async () => {
-    const infra = {
-      ...fakeInfra(),
-    }
+    const infra = fakeInfra()
 
     await main('--init')(infra)
+    const output = await readTilEnd(infra.stdout)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(
-      expect.stringMatching(/called with --init/)
-    )
+    expect(output).toEqual(expect.stringMatching(/called with --init/))
     expect(infra.spawn).not.toHaveBeenCalled()
     expect(infra.request).not.toHaveBeenCalled()
   })
@@ -177,8 +169,9 @@ describe('Startup', () => {
     }
 
     await main()(infra)
+    const output = await readTilEnd(infra.stdout)
 
-    expect(infra.writeStdout).toHaveBeenCalledWith(
+    expect(output).toEqual(
       expect.stringMatching(/Monorepo exists at (.*) updating\n/)
     )
 

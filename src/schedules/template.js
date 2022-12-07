@@ -50,13 +50,13 @@ const template = (w) =>
     w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
-    w.on(w.week(3), w.wed(), w.all(), w.deploy('database-diagram', 'dreamfest', 'lightning-talks')),
     w.on(
       w.week(3),
-      w.thu(),
+      w.wed(),
       w.all(),
-      w.deploy('boilerplate-knex')
+      w.deploy('database-diagram', 'dreamfest', 'lightning-talks')
     ),
+    w.on(w.week(3), w.thu(), w.all(), w.deploy('boilerplate-knex')),
     w.on(
       w.week(4),
       w.mon(),
@@ -91,7 +91,16 @@ const template = (w) =>
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
     w.on(w.week(6), w.tue(), w.online(), w.deploy('async-redux-stories')),
-    w.on(w.week(6), w.tue(), w.akl(), w.deploy('my-fullstack-collection', 'my-fullstack-collection-scss', 'todo-full-stack')),
+    w.on(
+      w.week(6),
+      w.tue(),
+      w.akl(),
+      w.deploy(
+        'my-fullstack-collection',
+        'my-fullstack-collection-scss',
+        'todo-full-stack'
+      )
+    ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
     w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth')),
@@ -99,10 +108,7 @@ const template = (w) =>
       w.week(6),
       w.thu(),
       w.akl(),
-      w.deploy(
-        'boilerplate-fullstack',
-        'boilerplate-fullstack-scss'
-      )
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-scss')
     ),
     w.on(w.week(7), w.mon(), w.except(w.online()), w.deploy('jwt-auth')),
     w.on(
@@ -119,10 +125,7 @@ const template = (w) =>
       w.week(7),
       w.thu(),
       w.welly(),
-      w.deploy(
-        'lost-and-found',
-        'show-me-the-money'
-      )
+      w.deploy('lost-and-found', 'show-me-the-money')
     )
   )
 

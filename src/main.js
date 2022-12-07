@@ -25,17 +25,17 @@ const main =
     // both exit early
     const flags = readArgs(args)
     if (flags.help) {
-      eff.writeStdout(usage)
+      eff.stdout.write(usage)
       return
     }
 
     if (flags.version) {
-      eff.writeStdout(`${PROGRAM_NAME} v${version}\n`)
+      eff.stdout.write(`${PROGRAM_NAME} v${version}\n`)
       return
     }
 
     let env = eff.env()
-    eff.writeStdout(`${PROGRAM_NAME} running...\n`)
+    eff.stdout.write(`${PROGRAM_NAME} running...\n`)
 
     const SPORK_DIRECTORY = Path.resolve(
       eff.cwd(),
@@ -59,13 +59,13 @@ const main =
     }
 
     if (flags.init) {
-      eff.writeStdout(`called with --init so we're all done here\n`)
+      eff.stdout.write(`called with --init so we're all done here\n`)
       return
     }
 
     // load ~/.spork/env
     if (eff.fsExists(envPath)) {
-      eff.writeStdout(`"${envPath}" exists, loading vars\n\n`)
+      eff.stdout.write(`"${envPath}" exists, loading vars\n\n`)
       const bytes = await eff.fsReadFile(envPath, 'utf8')
       const cfg = dotenv.parse(bytes)
       env = { ...cfg, ...env }
@@ -73,7 +73,7 @@ const main =
 
     if (flags.createSchedule) {
       if (!(flags.campus && flags.startDate && flags.cohortOrg)) {
-        eff.writeStdout(`required flags for create-schedule missing:
+        eff.stdout.write(`required flags for create-schedule missing:
 --campus welly | akl | online
 --start-date YYYY-MM-DD
 --cohort-org org-name\n`)
@@ -102,14 +102,14 @@ const main =
       )
 
       if (eff.fsExists(schedulePath) && !flags.overwrite) {
-        eff.writeStdout(
+        eff.stdout.write(
           `File exists at ${schedulePath}, not overwriting without the --overwrite flag\n`
         )
         return
       }
 
       await eff.fsWrite(schedulePath, scheduleJs, 'utf8')
-      eff.writeStdout(`Wrote new schedule to ${schedulePath}\n`)
+      eff.stdout.write(`Wrote new schedule to ${schedulePath}\n`)
       return
     }
 
@@ -125,7 +125,7 @@ const main =
     const MONOREPO_PATH = Path.join(reposPath, 'challenges')
     const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
     if (!eff.fsExists(MONOREPO_PATH)) {
-      eff.writeStdout(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
+      eff.stdout.write(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
       await eff.spawn(
         eff.cwd(),
         'git',
@@ -133,7 +133,7 @@ const main =
         { secret: GITHUB_ACCESS_TOKEN }
       )
     } else {
-      eff.writeStdout(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
+      eff.stdout.write(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
       await eff.spawn(
         MONOREPO_PATH,
         'git',
@@ -152,7 +152,7 @@ const main =
         ...eff,
         env: () => ({ ...env, GITHUB_USER, GITHUB_ACCESS_TOKEN }),
       })
-      eff.writeStdout(`called with --make-local-fork so we're done here\n`)
+      eff.stdout.write(`called with --make-local-fork so we're done here\n`)
       return
     }
 
@@ -167,7 +167,7 @@ const main =
         : eff.newDate(flags.date)
 
     if (!flags.schedule && !eff.fsExists(DEFAULT_SCHEDULE)) {
-      eff.writeStdout(`No schedule means nothing to do\n`)
+      eff.stdout.write(`No schedule means nothing to do\n`)
       return
     }
 
@@ -176,7 +176,7 @@ const main =
       flags.schedule || DEFAULT_SCHEDULE
     )
 
-    eff.writeStdout(`Loading schedule from ${schedulePath}\n`)
+    eff.stdout.write(`Loading schedule from ${schedulePath}\n`)
     const schedule = await eff.import(schedulePath)
 
     const cfg = {
