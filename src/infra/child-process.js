@@ -21,12 +21,12 @@ export const spawn = (streams, cwd, name, args, opts) =>
     child.stderr
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:err) `))
-      .pipe(streams.stderr)
+      .pipe(streams.stderr, { end: false })
 
     child.stdout
       .pipe(censorStream(secret))
       .pipe(timestampStream(`(${name}:out) `))
-      .pipe(streams.stdout)
+      .pipe(streams.stdout, { end: false })
 
     child.on('exit', (code) => {
       if (code === 0) {
