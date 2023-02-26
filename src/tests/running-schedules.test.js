@@ -112,7 +112,6 @@ describe('running schedules', () => {
       },
       body: JSON.stringify({
         required_status_checks: null,
-        enforce_admins: true,
         required_pull_request_reviews: {
           dismissal_restrictions: {},
           dismiss_stale_reviews: true,
