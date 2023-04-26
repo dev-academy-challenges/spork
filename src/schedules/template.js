@@ -48,6 +48,7 @@ const template = (w) =>
     w.on(w.week(2), w.tue(), w.all(), w.deploy('server-side-rendering')),
     w.on(w.week(2), w.wed(), w.all(), w.deploy('pupparazzi')),
     w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
+    w.on(w.week(2), w.fri(), w.all(), w.deploy('kata-typescript')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
     w.on(
