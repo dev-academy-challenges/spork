@@ -85,9 +85,7 @@ const template = (w) =>
         'redux-zoo',
         'todo-full-stack',
         'my-fullstack-collection',
-        'my-fullstack-collection-scss',
-        'boilerplate-fullstack',
-        'boilerplate-fullstack-scss'
+        'boilerplate-fullstack'
       )
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
@@ -96,11 +94,7 @@ const template = (w) =>
       w.week(6),
       w.tue(),
       w.akl(),
-      w.deploy(
-        'my-fullstack-collection',
-        'my-fullstack-collection-scss',
-        'todo-full-stack'
-      )
+      w.deploy('my-fullstack-collection', 'todo-full-stack')
     ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
@@ -109,7 +103,7 @@ const template = (w) =>
       w.week(6),
       w.thu(),
       w.akl(),
-      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-scss')
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack')
     ),
     w.on(w.week(7), w.mon(), w.except(w.online()), w.deploy('jwt-auth')),
     w.on(
@@ -118,7 +112,7 @@ const template = (w) =>
       w.welly(),
       w.deploy(
         'todo-full-stack',
-        'my-fullstack-collection-scss',
+        'my-fullstack-collection',
         'sweet-as-organics-api'
       )
     ),
