@@ -16,6 +16,7 @@ export default {
   fsMkDir: (...args) => FS.mkdir(...args),
   fsWrite: (...args) => FS.writeFile(...args),
   fsReadFile: FS.readFile,
+  fsCp: FS.cp,
   import: (path) => import(path),
   newDate: (...args) => new Date(...args),
   // @ts-ignore

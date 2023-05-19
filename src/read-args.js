@@ -102,6 +102,10 @@ const readArgs = (arr) => {
         flags.event = arr[i++]
         break
 
+      case '--create-fork':
+        flags.createForkBeta = arr[i++]
+        break
+
       default:
         throw new Error(`Unknown flag: ${chunk}`)
     }

@@ -16,6 +16,7 @@ const fakeInfra = () => {
     fsWrite: jest.fn(async () => {}),
     // @ts-ignore
     fsReadFile: jest.fn(async () => Buffer.from('')),
+    fsCp: jest.fn(async () => {}),
     import: jest.fn(async () => () => {}),
     newDate: (/** @type {any[]} */ ...args) =>
       // @ts-ignore

@@ -9,6 +9,7 @@ import exampleEnv from './example-env.js'
 import runner from './runner.js'
 import createSchedule from './schedules/index.js'
 import makeLocalClone from './make-local-clone.js'
+import createRepoFromPackage from './create-repo-from-package.js'
 import PROGRAM_NAME from './app-name.js'
 import version from './app-version.js'
 
@@ -153,6 +154,18 @@ const main =
         env: () => ({ ...env, GITHUB_USER, GITHUB_ACCESS_TOKEN }),
       })
       eff.stdout.write(`called with --make-local-fork so we're done here\n`)
+      return
+    }
+
+    if (flags.createForkBeta) {
+      await createRepoFromPackage(
+        flags.createForkBeta,
+        flags.cohortOrg
+      )({
+        ...eff,
+        env: () => ({ ...eff.env(), GITHUB_USER, GITHUB_ACCESS_TOKEN }),
+      })
+      eff.stdout.write(`called with --create-fork so we're done here\n`)
       return
     }
 
