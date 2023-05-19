@@ -1,5 +1,6 @@
 import * as Path from 'node:path/posix'
 import PROGRAM_NAME from './app-name.js'
+import makeLocalCloneCopy from './make-local-clone-copy.js'
 
 /**
  * @param {string} challenge
@@ -8,6 +9,10 @@ import PROGRAM_NAME from './app-name.js'
 export default (challenge, branch = 'main') =>
   async (eff) => {
     const env = eff.env()
+    if (env.SPORK_USE_FS_CP) {
+      return makeLocalCloneCopy(challenge)(eff)
+    }
+
     eff.stdout.write(`Making a local clone of ${challenge}\n`)
     const SPORK_DIRECTORY = Path.resolve(
       eff.cwd(),

@@ -26,8 +26,11 @@ export interface IInfra {
   cwd(): string
   fsExists(path: string): boolean
   fsMkDir(path: string): Promise<void>
+  fsMkDTemp(path: string): Promise<string>
+  tmpDir(): string
   fsReadFile: ReadFile
   fsWrite(path: string, data: string, encoding?: 'utf8'): Promise<void>
+  fsCp(src: string, dest: string, options: { recursive: true }): Promise<void>
   import(path: string): Promise<any> // oh, I forgot about how intense this is
   newDate(p: string | number): Date
   request: typeof import('./https').request

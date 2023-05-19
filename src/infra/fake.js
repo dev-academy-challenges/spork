@@ -13,9 +13,12 @@ const fakeInfra = () => {
     cwd: () => '/',
     fsExists: () => false,
     fsMkDir: jest.fn(async () => {}),
+    fsMkDTemp: jest.fn(async (prefix) => { return `${prefix}1234`}),
+    tmpDir: jest.fn(() => '/tmp'),
     fsWrite: jest.fn(async () => {}),
     // @ts-ignore
     fsReadFile: jest.fn(async () => Buffer.from('')),
+    fsCp: jest.fn(async () => {}),
     import: jest.fn(async () => () => {}),
     newDate: (/** @type {any[]} */ ...args) =>
       // @ts-ignore

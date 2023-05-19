@@ -1,5 +1,6 @@
 import * as Path from 'node:path/posix'
 import { createRepo, setBranchProtection } from './github.js'
+import forkToCohortCopy from './fork-to-cohort-copy.js'
 
 /**
  * @param {string} repoPath
@@ -8,6 +9,11 @@ import { createRepo, setBranchProtection } from './github.js'
  * @returns {import('./infra/Infra.js').Eff<void>}
  */
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
+  const { SPORK_USE_FS_CP } = eff.env()
+  if (SPORK_USE_FS_CP) {
+    return forkToCohortCopy(repoPath, cohort, challengeName)(eff)
+  }
+
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
   if (!eff.fsExists(pathToSubtree)) {
     throw new Error(`${challengeName} doesn't exist in monorepo`)
