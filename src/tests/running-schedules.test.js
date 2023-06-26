@@ -1,14 +1,15 @@
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
-import { jest } from '@jest/globals'
+
+import { vi, describe, it, expect } from 'vitest'
 
 describe('running schedules', () => {
   it('calls the schedule', async () => {
-    const schedule = jest.fn()
+    const schedule = vi.fn()
     const infra = {
       ...fakeInfra(),
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
       fsExists: (/** @type {string} */ path) =>
         path === `/~/.${APP_NAME}/schedule.js`,
     }
@@ -20,7 +21,7 @@ describe('running schedules', () => {
   })
 
   it('deploys todays challenge from the schedule', async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
     })
@@ -28,7 +29,7 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14')(infra)
@@ -84,14 +85,14 @@ describe('running schedules', () => {
   })
 
   it('sets branch protections for the main branch', async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
     })
 
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14')(infra)
@@ -124,7 +125,7 @@ describe('running schedules', () => {
   })
 
   it('deploys the challenges for a specific event', async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('xmas-eve').deploy('presents').to('children')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
     })
@@ -132,7 +133,7 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-e', 'xmas-eve')(infra)
@@ -187,7 +188,7 @@ describe('running schedules', () => {
     expect(schedule).toHaveBeenCalled()
   })
   it(`doesn't try to deploy a challenge that doesn't exist in the monorepo`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
     })
@@ -197,7 +198,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -228,7 +229,7 @@ describe('running schedules', () => {
   })
 
   it(`even --dry-run fails for a challenge that doesn't exist in the monorepo`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
     })
@@ -238,7 +239,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge`,
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -254,7 +255,7 @@ describe('running schedules', () => {
   })
 
   it(`continues past failed deploys`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14')
         .deploy('todays-challenge-1', 'todays-challenge-2')
         .to('my-cohort-org')
@@ -266,7 +267,7 @@ describe('running schedules', () => {
       fsExists: (/** @type {string} */ path) =>
         // the 1st package must not exist in the monorepo
         path !== `/~/.${APP_NAME}/repos/challenges/packages/todays-challenge-1`,
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     let err
@@ -323,7 +324,7 @@ describe('running schedules', () => {
   })
 
   it('calls the schedule, in dry-run mode', async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
       on('2022-03-15').deploy('tomorrows-challenge').to('my-cohort-org')
     })
@@ -331,7 +332,7 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', '2022-03-14', '--dry-run')(infra)
@@ -354,7 +355,7 @@ describe('running schedules', () => {
   })
 
   it(`deploys today's challenge with "--for-date today"`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('1984-03-19').deploy('birthday-challenge').to('my-cohort-org')
       on('1984-03-20').deploy('just-some-challenge').to('my-cohort-org')
     })
@@ -362,7 +363,7 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'today')(infra)
@@ -418,7 +419,7 @@ describe('running schedules', () => {
   })
 
   it(`deploys tomorrows challenge with "--for-date tomorrow"`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('1984-03-19').deploy('birthday-challenge').to('my-cohort-org')
       on('1984-03-20').deploy('just-some-challenge').to('my-cohort-org')
     })
@@ -426,7 +427,7 @@ describe('running schedules', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true, // the packages must exist in the monorepo
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     await main('-d', 'tomorrow')(infra)
@@ -480,7 +481,7 @@ describe('running schedules', () => {
   })
 
   it(`uses the credentials from /~/.${APP_NAME}/env`, async () => {
-    const schedule = jest.fn((on) => {
+    const schedule = vi.fn((on) => {
       on('2022-03-14').deploy('todays-challenge').to('my-cohort-org')
     })
 
@@ -498,7 +499,7 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
 
         return Buffer.from('')
       },
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
     }
 
     // @ts-ignore

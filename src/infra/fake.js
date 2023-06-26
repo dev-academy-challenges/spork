@@ -1,4 +1,5 @@
 import { PassThrough } from 'stream'
+import { vi } from 'vitest'
 
 /**
  * @return {import('./Infra').IInfra}
@@ -9,21 +10,23 @@ const fakeInfra = () => {
 
   const infra = {
     env: () => ({ GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_', HOME: '~' }),
-    spawn: jest.fn(async () => {}),
+    spawn: vi.fn(async () => {}),
     cwd: () => '/',
     fsExists: () => false,
-    fsMkDir: jest.fn(async () => {}),
-    fsMkDTemp: jest.fn(async (prefix) => { return `${prefix}1234`}),
-    tmpDir: jest.fn(() => '/tmp'),
-    fsWrite: jest.fn(async () => {}),
+    fsMkDir: vi.fn(async () => {}),
+    fsMkDTemp: vi.fn(async (prefix) => {
+      return `${prefix}1234`
+    }),
+    tmpDir: vi.fn(() => '/tmp'),
+    fsWrite: vi.fn(async () => {}),
     // @ts-ignore
-    fsReadFile: jest.fn(async () => Buffer.from('')),
-    fsCp: jest.fn(async () => {}),
-    import: jest.fn(async () => () => {}),
+    fsReadFile: vi.fn(async () => Buffer.from('')),
+    fsCp: vi.fn(async () => {}),
+    import: vi.fn(async () => () => {}),
     newDate: (/** @type {any[]} */ ...args) =>
       // @ts-ignore
       args.length === 0 ? new Date(448502400000) : new Date(...args),
-    request: jest.fn(async () => {}),
+    request: vi.fn(async () => {}),
     stdout,
     stderr,
   }

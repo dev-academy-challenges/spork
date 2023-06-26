@@ -3,6 +3,7 @@ import APP_NAME from '../app-name.js'
 import version from '../app-version.js'
 import fakeInfra from '../infra/fake.js'
 import { readTilEnd } from './utils'
+import { vi, describe, it, expect } from 'vitest'
 
 describe('Startup', () => {
   it('throws on invalid flags', async () => {
@@ -137,7 +138,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
-      import: jest.fn(async () => ({ default: () => {} })),
+      import: vi.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -165,7 +166,7 @@ describe('Startup', () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
-      import: jest.fn(async () => ({ default: () => {} })),
+      import: vi.fn(async () => ({ default: () => {} })),
     }
 
     await main()(infra)
@@ -190,7 +191,7 @@ describe('Startup', () => {
   it(`loads a schedule if provided`, async () => {
     const infra = {
       ...fakeInfra(),
-      import: jest.fn(async () => ({ default: () => {} })),
+      import: vi.fn(async () => ({ default: () => {} })),
     }
 
     await main('-s', '~/schedule.js')(infra)

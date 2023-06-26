@@ -1,14 +1,14 @@
+import { vi, describe, it, expect } from 'vitest'
 import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
-import { jest } from '@jest/globals'
 
 describe('make local fork', () => {
   it(`doesn't call the schedule`, async () => {
-    const schedule = jest.fn()
+    const schedule = vi.fn()
     const infra = {
       ...fakeInfra(),
-      import: jest.fn(async () => ({ default: schedule })),
+      import: vi.fn(async () => ({ default: schedule })),
       fsExists: (/** @type {string} */ path) =>
         path === `/~/.${APP_NAME}/schedule.js`,
     }
