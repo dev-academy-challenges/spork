@@ -13,7 +13,22 @@ const request = (args) => {
       if (res.statusCode === 201 || res.statusCode === 200) {
         resolve()
       } else {
-        reject(res.statusCode)
+        let json = ''
+        res.setEncoding('utf-8')
+        res.on('data', (data) => {
+          json += data
+        })
+        res.on('close', () => {
+          try {
+            const obj = JSON.parse(json)
+            for (const { message } of obj.errors) {
+              console.error(message)
+            }
+          } catch (e) {
+            console.error(e)
+          }
+          reject(new Error(`${res.statusCode} ${res.statusMessage}`))
+        })
       }
     })
 

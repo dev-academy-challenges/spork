@@ -31,8 +31,7 @@ export const createRepo = (org, name) => async (infra) => {
   try {
     return await infra.request(options)
   } catch (e) {
-    // @ts-ignore
-    throw new Error(`Failed to create ${name} in ${org}: ${e.toString()}`)
+    throw new Error(`Failed to create ${name} in ${org}: ${String(e)}`)
   }
 }
 
