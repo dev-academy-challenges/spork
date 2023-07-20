@@ -47,7 +47,8 @@ const template = (w) =>
     w.on(w.week(2), w.mon(), w.all(), w.deploy('express-server')),
     w.on(w.week(2), w.tue(), w.all(), w.deploy('server-side-rendering')),
     w.on(w.week(2), w.wed(), w.all(), w.deploy('pupparazzi')),
-    w.on(w.week(2), w.thu(), w.all(), w.deploy('heroku-checklist')),
+    w.on(w.week(2), w.thu(), w.all(), w.deploy('dokku-checklist')),
+    w.on(w.week(2), w.fri(), w.online(), w.deploy('lightning-talks')),
     w.on(w.week(2), w.fri(), w.all(), w.deploy('kata-typescript')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
@@ -71,6 +72,7 @@ const template = (w) =>
       w.deploy('broken-kaleidoscope', 'memory', 'enspiraled')
     ),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
+    w.on(w.week(4), w.thu(), w.online(), w.deploy('kata-react-forms')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
@@ -82,14 +84,14 @@ const template = (w) =>
       w.mon(),
       w.online(),
       w.deploy(
-        'redux-zoo',
-        'todo-full-stack',
-        'my-fullstack-collection',
-        'boilerplate-fullstack'
+        'query-em-all',
+        'todo-full-stack-query',
+        'my-fullstack-collection-query',
+        'boilerplate-fullstack-query'
       )
     ),
     w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
-    w.on(w.week(6), w.tue(), w.online(), w.deploy('async-redux-stories')),
+    w.on(w.week(6), w.tue(), w.online(), w.deploy('queries-and-mutations')),
     w.on(
       w.week(6),
       w.tue(),
@@ -98,7 +100,7 @@ const template = (w) =>
     ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
     w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
-    w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth')),
+    w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth-query')),
     w.on(
       w.week(6),
       w.thu(),
