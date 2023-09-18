@@ -29,26 +29,12 @@ const template = (w) =>
       w.all(),
       w.deploy('kata-data-structures', 'bowling-kata')
     ),
-    w.on(w.week(1), w.thu(), w.all(), w.deploy('tdd-bowling-kata')),
-    w.on(w.week(1), w.thu(), w.except(w.welly()), w.deploy('conways')),
+    w.on(w.week(1), w.thu(), w.all(), w.deploy('tdd-bowling-kata', 'conways')),
     w.on(w.week(1), w.fri(), w.all(), w.deploy('ascii-art-reader')),
-    w.on(
-      w.week(1),
-      w.fri(),
-      w.welly(),
-      w.deploy(
-        'conways',
-        'exercise-arrays',
-        'object-array-practice',
-        'kata-number-patterns',
-        'kata-fizzbuzz'
-      )
-    ),
     w.on(w.week(2), w.mon(), w.all(), w.deploy('express-server')),
     w.on(w.week(2), w.tue(), w.all(), w.deploy('server-side-rendering')),
     w.on(w.week(2), w.wed(), w.all(), w.deploy('pupparazzi')),
-    w.on(w.week(2), w.thu(), w.all(), w.deploy('dokku-checklist')),
-    w.on(w.week(2), w.fri(), w.online(), w.deploy('lightning-talks')),
+    w.on(w.week(2), w.fri(), w.except(w.akl()), w.deploy('lightning-talks')),
     w.on(w.week(2), w.fri(), w.all(), w.deploy('kata-typescript')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('knex-joins-stories')),
@@ -69,20 +55,19 @@ const template = (w) =>
       w.week(4),
       w.tue(),
       w.all(),
-      w.deploy('broken-kaleidoscope', 'memory', 'enspiraled')
+      w.deploy('broken-kaleidoscope', 'enspiraled')
     ),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('worldwide-routing')),
-    w.on(w.week(4), w.thu(), w.online(), w.deploy('kata-react-forms')),
+    w.on(w.week(4), w.thu(), w.except(w.akl()), w.deploy('kata-react-forms')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('charlottes-web-log-api')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('react-to-web-api')),
     w.on(w.week(5), w.wed(), w.all(), w.deploy('consuming-external-apis')),
     w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-react-api')),
-    w.on(w.week(6), w.mon(), w.except(w.online()), w.deploy('redux-minimal')),
     w.on(
       w.week(6),
       w.mon(),
-      w.online(),
+      w.except(w.akl()),
       w.deploy(
         'query-em-all',
         'todo-full-stack-query',
@@ -90,8 +75,8 @@ const template = (w) =>
         'boilerplate-fullstack-query'
       )
     ),
-    w.on(w.week(6), w.tue(), w.except(w.online()), w.deploy('sweet-as-beers')),
-    w.on(w.week(6), w.tue(), w.online(), w.deploy('queries-and-mutations')),
+    w.on(w.week(6), w.tue(), w.akl(), w.deploy('sweet-as-beers')),
+    w.on(w.week(6), w.tue(), w.except(w.akl()), w.deploy('queries-and-mutations')),
     w.on(
       w.week(6),
       w.tue(),
@@ -99,31 +84,15 @@ const template = (w) =>
       w.deploy('my-fullstack-collection', 'todo-full-stack')
     ),
     w.on(w.week(6), w.wed(), w.akl(), w.deploy('sweet-as-organics-api')),
-    w.on(w.week(6), w.wed(), w.welly(), w.deploy('async-redux-stories')),
-    w.on(w.week(6), w.wed(), w.online(), w.deploy('jwt-auth-query')),
+    w.on(w.week(6), w.wed(), w.except(w.akl()), w.deploy('jwt-auth-query')),
     w.on(
       w.week(6),
       w.thu(),
       w.akl(),
+      // should be -query?
       w.deploy('boilerplate-fullstack', 'boilerplate-fullstack')
     ),
-    w.on(w.week(7), w.mon(), w.except(w.online()), w.deploy('jwt-auth')),
-    w.on(
-      w.week(7),
-      w.mon(),
-      w.welly(),
-      w.deploy(
-        'todo-full-stack',
-        'my-fullstack-collection',
-        'sweet-as-organics-api'
-      )
-    ),
-    w.on(
-      w.week(7),
-      w.thu(),
-      w.welly(),
-      w.deploy('lost-and-found', 'show-me-the-money')
-    )
+    w.on(w.week(7), w.mon(), w.akl(), w.deploy('jwt-auth')),
   )
 
 export default template
