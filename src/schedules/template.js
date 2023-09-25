@@ -42,7 +42,7 @@ const template = (w) =>
       w.week(3),
       w.wed(),
       w.all(),
-      w.deploy('database-diagram', 'dreamfest', 'lightning-talks')
+      w.deploy('database-diagram', 'dreamfest', 'lightning-talks', 'software-quality')
     ),
     w.on(w.week(3), w.thu(), w.all(), w.deploy('boilerplate-knex')),
     w.on(
