@@ -49,6 +49,7 @@ export const setBranchProtection = (owner, repo) => async (infra) => {
   const branch = 'main'
 
   const body = JSON.stringify({
+    enforce_admins: true,
     required_status_checks: null,
     required_pull_request_reviews: {
       dismissal_restrictions: {},
@@ -75,7 +76,6 @@ export const setBranchProtection = (owner, repo) => async (infra) => {
   try {
     return await infra.request(options)
   } catch (e) {
-    // @ts-ignore
     console.error(e)
     throw new Error(
       `Failed to set branch protections on ${owner}/${repo}: ${String(e)}`
