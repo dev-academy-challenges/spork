@@ -112,6 +112,7 @@ describe('running schedules', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        enforce_admins: true,
         required_status_checks: null,
         required_pull_request_reviews: {
           dismissal_restrictions: {},
