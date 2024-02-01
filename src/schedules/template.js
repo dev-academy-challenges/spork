@@ -20,7 +20,6 @@ const template = (w) =>
         'exercise-arrays',
         'object-array-practice',
         'kata-number-patterns',
-        'kata-fizzbuzz'
       )
     ),
     w.on(
@@ -46,7 +45,7 @@ const template = (w) =>
       w.week(2),
       w.tue(),
       w.all(),
-      w.deploy('pixel-party', 'broken-kaleidoscope', 'enspiraled')
+      w.deploy('react-state-kata', 'broken-kaleidoscope', 'enspiraled')
     ),
     w.on(w.week(2), w.wed(), w.all(), w.deploy('worldwide-routing')),
     w.on(
@@ -56,13 +55,13 @@ const template = (w) =>
       w.deploy('react-form-demo', 'kata-react-forms', 'boilerplate-react')
     ),
     w.on(w.week(2), w.fri(), w.except(w.akl()), w.deploy('lightning-talks')),
-    w.on(w.week(3), w.mon(), w.all(), w.deploy('consuming-external-apis')),
+    w.on(w.week(3), w.mon(), w.all(), w.deploy('consuming-clientside-apis')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('query-em-all')),
     w.on(
       w.week(3),
       w.wed(),
       w.all(),
-      w.deploy('korihi-client', 'lightning-talks', 'software-quality')
+      w.deploy('korihi-client', 'software-quality')
     ),
     w.on(w.week(3), w.thu(), w.all(), w.deploy('boilerplate-phase1')),
     w.on(
@@ -72,15 +71,14 @@ const template = (w) =>
       w.deploy('express-server', 'art-gallery')
     ),
     w.on(w.week(4), w.tue(), w.all(), w.deploy('pupparazzi')),
-    w.on(w.week(4), w.wed(), w.all(), w.deploy('consuming-external-apis')),
+    w.on(w.week(4), w.wed(), w.all(), w.deploy('consuming-server-apis')),
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-api')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('flight-club')),
     w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest-react')),
-    w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-fullstack-query')),
+    w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-fullstack')),
     w.on(w.week(6), w.mon(), w.all(), w.deploy('jwt-auth')),
-    w.on(w.week(6), w.tue(), w.all(), w.deploy('todo-full-stack-query')),
-    w.on(w.week(6), w.thu(), w.all(), w.deploy('boilerplate-fullstack-query'))
+    w.on(w.week(6), w.tue(), w.all(), w.deploy('todo-full-stack')),
   )
 
 export default template
