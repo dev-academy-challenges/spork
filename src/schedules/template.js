@@ -54,7 +54,7 @@ const template = (w) =>
       w.all(),
       w.deploy('react-form-demo', 'kata-react-forms', 'boilerplate-react')
     ),
-    w.on(w.week(2), w.fri(), w.except(w.akl()), w.deploy('lightning-talks')),
+    w.on(w.week(2), w.fri(), w.all(), w.deploy('lightning-talks')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('consuming-clientside-apis')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('query-em-all')),
     w.on(
