@@ -40,6 +40,7 @@ spork --init
 ```sh
 code ~/.spork/env
 ```
+
 > **Note:** don't forget to umcomment `GITHUB_USER` and `GITHUB_ACCESS_TOKEN`
 > by removing the '#'
 
@@ -241,10 +242,27 @@ challenge that they use instead.
 w.on(w.week(4), w.mon(), w.except(w.welly()), w.deploy('hotdog-machine')),
 w.on(w.week(4), w.mon(), w.welly(), w.deploy('vegan-hotdog-alternative-machine')),
 ```
+
 # If you need to update the template
 
-If you need to update the base template (so that your changes apply for all future cohorts), it's at `/src/schedules/template.js` 
-* Make your changes in a branch 
-* Don't forget `npx prettier --write foldername`
-* Do `npm version patch` to increment the version number
-* Then make a PR and send it to Gerard to review
+If you need to update the base template (so that your changes apply for all future cohorts), it's at `/src/schedules/template.js`
+
+- Make your changes in a branch
+- Don't forget `npx prettier --write foldername`
+- Do `npm version patch` to increment the version number
+- Then make a PR and send it to Gerard to review
+
+# Config: USE_FS_CP
+
+One environment variable that spork uses is `SPORK_USE_FS_CP`, if this
+is set to `"true"`, spork will copy files out of a working copy to
+create a new repo instead of `git subtree` commands.
+
+This can be faster and less complicated, but will lose history
+
+In some cases, users have experienced bugs with the checkout that are resolved by this setting. You can add this line to your ~/.spork/env`
+file to use it
+
+```sh
+SPORK_USE_FS_CP=true
+```
