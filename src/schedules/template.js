@@ -17,8 +17,7 @@ const template = (w) =>
       w.deploy(
         'kata-types-modules',
         'kata-strings-numbers-modules',
-        'exercise-arrays',
-        'object-array-practice',
+        'kata-object-array',
         'kata-number-patterns',
       )
     ),
@@ -75,7 +74,7 @@ const template = (w) =>
     w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-api')),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('knex-todo-cli')),
     w.on(w.week(5), w.tue(), w.all(), w.deploy('flight-club')),
-    w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest-react')),
+    w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest')),
     w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-fullstack')),
     w.on(w.week(6), w.mon(), w.all(), w.deploy('jwt-auth')),
     w.on(w.week(6), w.tue(), w.all(), w.deploy('todo-full-stack')),
