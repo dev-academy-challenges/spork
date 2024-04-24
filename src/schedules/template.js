@@ -19,6 +19,7 @@ const template = (w) =>
         'kata-strings-numbers-modules',
         'kata-object-array',
         'kata-number-patterns',
+        'kata-fizzbuzz'
       )
     ),
     w.on(
@@ -51,18 +52,22 @@ const template = (w) =>
       w.week(2),
       w.thu(),
       w.all(),
-      w.deploy('react-form-demo', 'kata-react-forms', 'boilerplate-react')
+      w.deploy(
+        'react-form-demo',
+        'kata-react-forms',
+        'boilerplate-react',
+        'lightning-talks'
+      )
     ),
-    w.on(w.week(2), w.fri(), w.all(), w.deploy('lightning-talks')),
     w.on(w.week(3), w.mon(), w.all(), w.deploy('consuming-clientside-apis')),
     w.on(w.week(3), w.tue(), w.all(), w.deploy('query-em-all')),
+    w.on(w.week(3), w.wed(), w.all(), w.deploy('korihi', 'software-quality')),
     w.on(
       w.week(3),
-      w.wed(),
+      w.thu(),
       w.all(),
-      w.deploy('korihi-client', 'software-quality')
+      w.deploy('boilerplate-phase1, boilerplate-phase1-tw')
     ),
-    w.on(w.week(3), w.thu(), w.all(), w.deploy('boilerplate-phase1')),
     w.on(
       w.week(4),
       w.mon(),
@@ -71,13 +76,35 @@ const template = (w) =>
     ),
     w.on(w.week(4), w.tue(), w.all(), w.deploy('pupparazzi')),
     w.on(w.week(4), w.wed(), w.all(), w.deploy('consuming-server-apis')),
-    w.on(w.week(4), w.thu(), w.all(), w.deploy('boilerplate-react-api')),
+    w.on(
+      w.week(4),
+      w.wed(),
+      w.online(),
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing')
+    ),
+    w.on(
+      w.week(4),
+      w.thu(),
+      w.all(),
+      w.deploy('boilerplate-react-api', 'boilerplate-react-api-tw')
+    ),
     w.on(w.week(5), w.mon(), w.all(), w.deploy('knex-todo-cli')),
-    w.on(w.week(5), w.tue(), w.all(), w.deploy('flight-club')),
+    w.on(
+      w.week(5),
+      w.tue(),
+      w.all(),
+      w.deploy('flight-club', 'database-diagram')
+    ),
     w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest')),
-    w.on(w.week(5), w.thu(), w.all(), w.deploy('boilerplate-fullstack')),
+    w.on(
+      w.week(5),
+      w.thu(),
+      w.all(),
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing')
+    ),
     w.on(w.week(6), w.mon(), w.all(), w.deploy('jwt-auth')),
     w.on(w.week(6), w.tue(), w.all(), w.deploy('todo-full-stack')),
+    w.on(w.week(6), w.thu(), w.all(), w.deploy('boilerplate-fullstack-auth'))
   )
 
 export default template
