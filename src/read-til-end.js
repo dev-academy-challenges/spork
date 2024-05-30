@@ -10,7 +10,7 @@ export default function readTilEnd(stream) {
       result += chunk
     })
 
-    stream.on('finish', () => {
+    stream.on('end', () => {
       resolve(result)
     })
 

@@ -31,7 +31,6 @@ const main =
     }
 
     if (flags.version) {
-      eff.stdout.write('BUTTs')
       eff.stdout.write(`${PROGRAM_NAME} v${version}\n`)
       return
     }

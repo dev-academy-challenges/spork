@@ -3,7 +3,7 @@ import main from '../main.js'
 import APP_NAME from '../app-name.js'
 import fakeInfra from '../infra/fake.js'
 
-describe('make local fork', () => {
+describe('make local clone', () => {
   it(`doesn't call the schedule`, async () => {
     const schedule = vi.fn()
     const infra = {
@@ -19,7 +19,7 @@ describe('make local fork', () => {
     expect(schedule).not.toHaveBeenCalled()
   })
 
-  it(`creates a split and deletes it`, async () => {
+  it(`gets the id for a tree object`, async () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
@@ -30,34 +30,11 @@ describe('make local fork', () => {
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      ['subtree', 'split', `--prefix=packages/example`, '-b', `example-split`],
-      {}
+      ['ls-tree', 'main', 'packages/example', '--object-only']
     )
   })
 
-  it(`clones from a split branch`, async () => {
-    const infra = {
-      ...fakeInfra(),
-      fsExists: () => true,
-    }
-
-    await main('--make-local-clone', 'example')(infra)
-
-    expect(infra.spawn).toHaveBeenCalledWith(
-      '/',
-      'git',
-      [
-        'clone',
-        `/~/.${APP_NAME}/repos/challenges`,
-        '--branch',
-        `example-split`,
-        'example',
-      ],
-      {}
-    )
-  })
-
-  it(`deletes the branch it created`, async () => {
+  it(`creates a tar stream for that object`, async () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
@@ -68,12 +45,11 @@ describe('make local fork', () => {
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      ['branch', '-D', `example-split`],
-      {}
+      ['archive', '__git_ls-tree__']
     )
   })
 
-  it(`renames the split branch in the clone to "main"`, async () => {
+  it(`extracts the tar stream to the right directory`, async () => {
     const infra = {
       ...fakeInfra(),
       fsExists: () => true,
@@ -81,11 +57,10 @@ describe('make local fork', () => {
 
     await main('--make-local-clone', 'example')(infra)
 
-    expect(infra.spawn).toHaveBeenCalledWith(
-      '/example',
-      'git',
-      ['branch', '-m', `main`],
-      {}
-    )
+    expect(infra.spawn).toHaveBeenCalledWith('/', 'tar', [
+      '-x',
+      '-C',
+      'example',
+    ])
   })
 })

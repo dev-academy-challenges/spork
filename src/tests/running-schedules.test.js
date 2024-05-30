@@ -69,21 +69,14 @@ describe('running schedules', () => {
       }),
     })
 
-    expect(infra.exec).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/repos/challenges`,
-      'git',
-      ['ls-tree', 'main', 'packages/todays-challenge', '--object-only']
-    )
-
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
         'push',
         `https://me:_@github.com/my-cohort-org/todays-challenge.git`,
-        'stdout:refs/heads/main',
-      ],
-      { secret: '_' }
+        '__git_commit-tree__:refs/heads/main',
+      ]
     )
     expect(schedule).toHaveBeenCalled()
   })
@@ -184,9 +177,8 @@ describe('running schedules', () => {
       [
         'push',
         `https://me:_@github.com/children/presents.git`,
-        'stdout:refs/heads/main',
-      ],
-      { secret: '_' }
+        '__git_commit-tree__:refs/heads/main',
+      ]
     )
     expect(schedule).toHaveBeenCalled()
   })
@@ -275,7 +267,7 @@ describe('running schedules', () => {
     }
 
     expect(err).not.toBeNull()
-    // @ts-ignore
+    // @ts-expect-error
     expect(err.message).toMatch(/todays-challenge-1 doesn't exist/)
     expect(infra.request).toHaveBeenCalledWith({
       body: JSON.stringify({
@@ -293,17 +285,10 @@ describe('running schedules', () => {
       port: 443,
     })
 
-    expect(infra.exec).toHaveBeenCalledWith(
-      `/~/.${APP_NAME}/repos/challenges`,
-      'git',
-      ['ls-tree', 'main', 'packages/todays-challenge-2', '--object-only']
-    )
-
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      ['push', expect.any(String), 'stdout:refs/heads/main'],
-      { secret: expect.any(String) }
+      ['push', expect.any(String), '__git_commit-tree__:refs/heads/main']
     )
     expect(schedule).toHaveBeenCalled()
   })
@@ -394,9 +379,8 @@ describe('running schedules', () => {
       [
         'push',
         `https://me:_@github.com/my-cohort-org/birthday-challenge.git`,
-        'stdout:refs/heads/main',
-      ],
-      { secret: '_' }
+        '__git_commit-tree__:refs/heads/main',
+      ]
     )
     expect(schedule).toHaveBeenCalled()
   })
@@ -452,13 +436,10 @@ describe('running schedules', () => {
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
-        'subtree',
         'push',
-        `--prefix=packages/just-some-challenge`,
         `https://me:_@github.com/my-cohort-org/just-some-challenge.git`,
-        'main',
-      ],
-      { secret: '_' }
+        '__git_commit-tree__:refs/heads/main',
+      ]
     )
     expect(schedule).toHaveBeenCalled()
   })
@@ -492,13 +473,10 @@ GITHUB_ACCESS_TOKEN=gh_peters_token\n`)
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
-        'subtree',
         'push',
-        `--prefix=packages/todays-challenge`,
         `https://peter:gh_peters_token@github.com/my-cohort-org/todays-challenge.git`,
-        'main',
-      ],
-      { secret: 'gh_peters_token' }
+        '__git_commit-tree__:refs/heads/main',
+      ]
     )
 
     const basicAuth = Buffer.from('peter:gh_peters_token').toString('base64')

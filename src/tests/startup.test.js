@@ -154,12 +154,11 @@ describe('Startup', () => {
 
     await main()(infra)
 
-    expect(infra.spawn).toHaveBeenCalledWith(
+    expect(infra.spawn).toHaveBeenCalledWith(expect.any(String), 'git', [
+      'clone',
       expect.any(String),
-      'git',
-      ['clone', expect.any(String), `/~/.${APP_NAME}/repos/challenges`],
-      { secret: '_' }
-    )
+      `/~/.${APP_NAME}/repos/challenges`,
+    ])
   })
 
   it(`pulls from origin if the monorepo directory exists`, async () => {
@@ -183,8 +182,7 @@ describe('Startup', () => {
         'pull',
         'https://me:_@github.com/dev-academy-challenges/challenges',
         'main:main',
-      ],
-      { secret: '_' }
+      ]
     )
   })
 

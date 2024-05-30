@@ -1,4 +1,4 @@
-import { PassThrough } from 'stream'
+import { PassThrough, Readable, Writable } from 'stream'
 import { vi } from 'vitest'
 
 /**
@@ -10,9 +10,27 @@ const fakeInfra = () => {
 
   const infra = {
     env: () => ({ GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_', HOME: '~' }),
-    spawn: vi.fn(async () => {}),
-    exec: vi.fn(async () => {
-      return 'stdout'
+    spawn: vi.fn((_, cmd, [subcmd]) => {
+      const stdout = new Readable({
+        read() {},
+      })
+      stdout.push(`__${cmd}_${subcmd}__`)
+      stdout.push(null)
+
+      const stderr = new Readable({
+        read() {},
+      })
+      stderr.push(`__${cmd}_${subcmd}_err__`)
+      stderr.push(null)
+
+      const stdin = new Writable({
+        write(_, __, cb) {
+          cb()
+        },
+      })
+      const exit = Promise.resolve(0)
+
+      return { stdout, stderr, stdin, exit }
     }),
     cwd: () => '/',
     fsExists: () => false,
