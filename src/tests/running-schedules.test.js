@@ -69,15 +69,19 @@ describe('running schedules', () => {
       }),
     })
 
+    expect(infra.exec).toHaveBeenCalledWith(
+      `/~/.${APP_NAME}/repos/challenges`,
+      'git',
+      ['ls-tree', 'main', 'packages/todays-challenge', '--object-only']
+    )
+
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
-        'subtree',
         'push',
-        `--prefix=packages/todays-challenge`,
         `https://me:_@github.com/my-cohort-org/todays-challenge.git`,
-        'main',
+        'stdout:refs/heads/main',
       ],
       { secret: '_' }
     )
@@ -178,11 +182,9 @@ describe('running schedules', () => {
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
-        'subtree',
         'push',
-        `--prefix=packages/presents`,
         `https://me:_@github.com/children/presents.git`,
-        'main',
+        'stdout:refs/heads/main',
       ],
       { secret: '_' }
     )
@@ -217,13 +219,7 @@ describe('running schedules', () => {
     expect(infra.spawn).not.toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      [
-        'subtree',
-        'push',
-        `--prefix=packages/todays-challenge`,
-        expect.any(String),
-        'main',
-      ],
+      ['push', expect.any(String), 'stdout:refs/heads/main'],
       { secret: expect.any(String) }
     )
     expect(schedule).toHaveBeenCalled()
@@ -297,28 +293,16 @@ describe('running schedules', () => {
       port: 443,
     })
 
-    expect(infra.spawn).not.toHaveBeenCalledWith(
+    expect(infra.exec).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      [
-        'subtree',
-        'push',
-        `--prefix=packages/todays-challenge-1`,
-        expect.any(String),
-        'main',
-      ],
-      { secret: expect.any(String) }
+      ['ls-tree', 'main', 'packages/todays-challenge-2', '--object-only']
     )
+
     expect(infra.spawn).toHaveBeenCalledWith(
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
-      [
-        'subtree',
-        'push',
-        `--prefix=packages/todays-challenge-2`,
-        expect.any(String),
-        'main',
-      ],
+      ['push', expect.any(String), 'stdout:refs/heads/main'],
       { secret: expect.any(String) }
     )
     expect(schedule).toHaveBeenCalled()
@@ -408,11 +392,9 @@ describe('running schedules', () => {
       `/~/.${APP_NAME}/repos/challenges`,
       'git',
       [
-        'subtree',
         'push',
-        `--prefix=packages/birthday-challenge`,
         `https://me:_@github.com/my-cohort-org/birthday-challenge.git`,
-        'main',
+        'stdout:refs/heads/main',
       ],
       { secret: '_' }
     )

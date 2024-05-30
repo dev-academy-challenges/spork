@@ -11,6 +11,7 @@ import createSchedule from './schedules/index.js'
 import makeLocalClone from './make-local-clone.js'
 import PROGRAM_NAME from './app-name.js'
 import version from './app-version.js'
+import forward from './forward.js'
 
 // const MONOREPO_NAME = 'challenges'
 /**
@@ -30,6 +31,7 @@ const main =
     }
 
     if (flags.version) {
+      eff.stdout.write('BUTTs')
       eff.stdout.write(`${PROGRAM_NAME} v${version}\n`)
       return
     }
@@ -126,22 +128,21 @@ const main =
     const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
     if (!eff.fsExists(MONOREPO_PATH)) {
       eff.stdout.write(`Monorepo doesn't exist at ${MONOREPO_PATH}. Cloning\n`)
-      await eff.spawn(
-        eff.cwd(),
-        'git',
-        ['clone', MONOREPO_URL, MONOREPO_PATH],
-        { secret: GITHUB_ACCESS_TOKEN }
-      )
+      const clone = eff.spawn(eff.cwd(), 'git', [
+        'clone',
+        MONOREPO_URL,
+        MONOREPO_PATH,
+      ])
+      await forward(clone, eff)
     } else {
       eff.stdout.write(`Monorepo exists at ${MONOREPO_PATH}, updating\n`)
-      await eff.spawn(
-        MONOREPO_PATH,
-        'git',
-        ['pull', MONOREPO_URL, 'main:main'],
-        {
-          secret: GITHUB_ACCESS_TOKEN,
-        }
-      )
+      const pull = eff.spawn(MONOREPO_PATH, 'git', [
+        'pull',
+        MONOREPO_URL,
+        'main:main',
+      ])
+
+      await forward(pull, eff)
     }
 
     if (flags.makeLocalClone) {
@@ -155,8 +156,6 @@ const main =
       eff.stdout.write(`called with --make-local-fork so we're done here\n`)
       return
     }
-
-   
 
     // @ts-ignore
     const today = eff.newDate()

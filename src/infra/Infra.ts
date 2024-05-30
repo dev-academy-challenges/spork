@@ -13,16 +13,24 @@
 //   post: (...args) => post(...args),
 // }
 
-import type { Duplex } from 'node:stream'
+import type { Duplex, Writable, Readable } from 'node:stream'
 
 type ReadFile = {
   (path: string): Promise<Buffer>
   (path: string, encoding: 'utf8'): Promise<string>
 }
 
+export type SpawnedCP = {
+  stdin: Writable
+  stdout: Readable
+  stderr: Readable
+  exit: Promise<number>
+  name: string
+}
+
 export interface IInfra {
   env(): Record<string, string | undefined>
-  spawn(...args: any[]): Promise<void>
+  spawn(...args: any[]): SpawnedCP
   cwd(): string
   fsExists(path: string): boolean
   fsMkDir(path: string): Promise<void>

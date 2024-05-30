@@ -1,6 +1,7 @@
 import * as Path from 'node:path/posix'
 import { createRepo, setBranchProtection } from './github.js'
-import forkToCohortCopy from './fork-to-cohort-copy.js'
+import forward from './forward.js'
+import readTilEnd from './read-til-end.js'
 
 /**
  * @param {string} repoPath
@@ -9,11 +10,6 @@ import forkToCohortCopy from './fork-to-cohort-copy.js'
  * @returns {import('./infra/Infra.js').Eff<void>}
  */
 const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
-  const { SPORK_USE_FS_CP } = eff.env()
-  if (SPORK_USE_FS_CP) {
-    return forkToCohortCopy(repoPath, cohort, challengeName)(eff)
-  }
-
   const pathToSubtree = Path.join(repoPath, 'packages', challengeName)
   if (!eff.fsExists(pathToSubtree)) {
     throw new Error(`${challengeName} doesn't exist in monorepo`)
@@ -24,11 +20,26 @@ const forkToCohort = (repoPath, cohort, challengeName) => async (eff) => {
 
   await createRepo(cohort, challengeName)(eff)
 
-  await eff.spawn(
-    repoPath,
-    `git`,
-    ['subtree', 'push', `--prefix=packages/${challengeName}`, url, `main`],
-    { secret: GITHUB_ACCESS_TOKEN }
+  const lsTree = eff.spawn(repoPath, 'git', [
+    'ls-tree',
+    'main',
+    `packages/${challengeName}`,
+    '--object-only',
+  ])
+  const treeId = await readTilEnd(lsTree.stdout)
+
+  const commitTree = eff.spawn(repoPath, 'git', [
+    'commit-tree',
+    '-m',
+    'Sporked',
+    `${treeId.trim()}`,
+  ])
+
+  const id = await readTilEnd(commitTree.stdout)
+
+  await forward(
+    eff.spawn(repoPath, `git`, ['push', url, `${id.trim()}:refs/heads/main`]),
+    eff
   )
 
   await setBranchProtection(cohort, challengeName)(eff)

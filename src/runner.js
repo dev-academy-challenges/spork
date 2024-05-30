@@ -78,8 +78,7 @@ const runner = (cfg, f) => async (eff) => {
   }
 
   for (const { repo, error } of failures) {
-    // @ts-ignore
-    eff.stdout.write(`deploying ${repo} failed with ${error.message}\n`)
+    eff.stdout.write(`deploying ${repo} failed with ${error}\n`)
   }
 
   if (failures.length === 1) {

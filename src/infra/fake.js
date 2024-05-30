@@ -11,6 +11,9 @@ const fakeInfra = () => {
   const infra = {
     env: () => ({ GITHUB_USER: 'me', GITHUB_ACCESS_TOKEN: '_', HOME: '~' }),
     spawn: vi.fn(async () => {}),
+    exec: vi.fn(async () => {
+      return 'stdout'
+    }),
     cwd: () => '/',
     fsExists: () => false,
     fsMkDir: vi.fn(async () => {}),

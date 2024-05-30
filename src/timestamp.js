@@ -1,4 +1,3 @@
-// const { Transform } = require('stream')
 import { Transform } from 'node:stream'
 
 /**

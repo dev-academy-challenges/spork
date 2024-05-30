@@ -1,6 +1,7 @@
 import * as Path from 'node:path/posix'
 import PROGRAM_NAME from './app-name.js'
-import makeLocalCloneCopy from './make-local-clone-copy.js'
+import forward from './forward.js'
+import readTilEnd from './read-til-end.js'
 
 /**
  * @param {string} challenge
@@ -9,69 +10,34 @@ import makeLocalCloneCopy from './make-local-clone-copy.js'
 export default (challenge, branch = 'main') =>
   async (eff) => {
     const env = eff.env()
-    if (env.SPORK_USE_FS_CP) {
-      return makeLocalCloneCopy(challenge)(eff)
-    }
 
     eff.stdout.write(`Making a local clone of ${challenge}\n`)
     const SPORK_DIRECTORY = Path.resolve(
       eff.cwd(),
-      env.SPORK_DIRECTORY || `${env.HOME}/.${PROGRAM_NAME}`
+      env.SPORK_DIRECTORY ?? `${env.HOME}/.${PROGRAM_NAME}`
     )
     const challengesPath = Path.join(SPORK_DIRECTORY, 'repos', 'challenges')
-    try {
-      if (branch !== 'main') {
-        const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = env
-        const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
-        await eff.spawn(challengesPath, 'git', ['fetch', MONOREPO_URL], {})
-        await eff.spawn(challengesPath, 'git', ['checkout', branch], {})
-        await eff.spawn(challengesPath, 'git', [
-          'pull',
-          'origin',
-          `${branch}:${branch}`,
-        ])
-      }
+    const { GITHUB_USER, GITHUB_ACCESS_TOKEN } = env
+    const MONOREPO_URL = `https://${GITHUB_USER}:${GITHUB_ACCESS_TOKEN}@github.com/dev-academy-challenges/challenges`
+    await forward(
+      eff.spawn(challengesPath, 'git', ['pull', MONOREPO_URL], {}),
+      eff
+    )
 
-      await eff.spawn(
-        challengesPath,
-        'git',
-        [
-          'subtree',
-          'split',
-          `--prefix=packages/${challenge}`,
-          '-b',
-          `${challenge}-split`,
-        ],
-        {}
-      )
+    const lsTree = eff.spawn(challengesPath, 'git', [
+      'ls-tree',
+      branch,
+      `packages/${challenge}`,
+      '--object-only',
+    ])
 
-      await eff.spawn(
-        eff.cwd(),
-        'git',
-        [
-          'clone',
-          challengesPath,
-          `--branch`,
-          `${challenge}-split`,
-          `${challenge}`,
-        ],
-        {}
-      )
-
-      await eff.spawn(
-        challengesPath,
-        'git',
-        ['branch', '-D', `${challenge}-split`],
-        {}
-      )
-
-      await eff.spawn(
-        Path.join(eff.cwd(), challenge),
-        'git',
-        ['branch', '-m', `main`],
-        {}
-      )
-    } finally {
-      await eff.spawn(challengesPath, 'git', ['checkout', 'main'], {})
-    }
+    const treeId = await readTilEnd(lsTree.stdout)
+    await eff.fsMkDir(Path.join(eff.cwd(), challenge))
+    const tar = eff.spawn(eff.cwd(), 'tar', ['-x', '-C', `${challenge}`])
+    const archive = eff.spawn(challengesPath, 'git', [
+      'archive',
+      `${treeId.trim()}`,
+    ])
+    archive.stdout.pipe(tar.stdin)
+    await forward(tar, eff)
   }

@@ -11,7 +11,7 @@ export default {
   env: () => process.env,
   spawn: (...args) =>
     // @ts-ignore
-    spawn({ stdout: process.stdout, stderr: process.stdout }, ...args),
+    spawn(...args),
   cwd: () => process.cwd(),
   fsExists: (...args) => existsSync(...args),
   fsMkDir: (...args) => FS.mkdir(...args),
