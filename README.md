@@ -22,9 +22,8 @@ Install spork directly from github with this npm command
 npm install -g https://github.com/dev-academy-challenges/spork.git
 ```
 
-> **Note:** this installs two commands `spork` and `publish-challenges` that
-> behave identically, this documentation will use `spork` in all examples, but you
-> can also use `publish-challenges` wherever you use spork.
+> [!WARNING]
+> spork requires that git is installed and at least version 2.34
 
 Run this command to
 create the `~/.spork` directory
@@ -41,7 +40,7 @@ spork --init
 code ~/.spork/env
 ```
 
-> **Note:** don't forget to umcomment `GITHUB_USER` and `GITHUB_ACCESS_TOKEN`
+> **Note:** don't forget to un-comment `GITHUB_USER` and `GITHUB_ACCESS_TOKEN`
 > by removing the '#'
 
 `spork` can bootstrap a schedule for you with a command like this.
@@ -96,26 +95,6 @@ spork -d today
 ```
 
 That should be everything you need for day-to-day use of spork.
-
-# Refreshing recently-updated challenges
-
-Spork gets the challenges from [dev-academy-challenges/challenges](https://github.com/dev-academy-challenges/challenges), so if a challenge gets updated in [dev-academy-challenges](https://github.com/dev-academy-challenges) you need to refresh the challenges monorepo with the latest version of the challenge before using spork to push the challenge to a cohort org.
-
-First clone down [dev-academy-challenges/challenges](https://github.com/dev-academy-challenges/challenges) if you haven't already. Then from the `main` branch of your local copy of the challenges monorepo:
-
-```sh
-git pull
-git subtree pull --prefix=packages/$CHALLENGE_NAME git@github.com:dev-academy-challenges/$CHALLENGE_NAME main
-git push origin main
-```
-
-e.g.
-
-```sh
-git subtree pull --prefix=packages/lightning-talks git@github.com:dev-academy-challenges/lightning-talks main
-```
-
-Or reach out to [me](gerard.paapu@devacademy.co.nz) and I'll do it.
 
 # Schedule files
 
@@ -207,11 +186,9 @@ The valid campus names are: `welly`, `akl` and `online`
 
 spork uses these internally to include the correct challenges.
 
-Unfortunately the [template](https://github.com/dev-academy-challenges/spork/blob/main/src/schedules/template.js) is not very readable code.
+To make changes to how the schedule is edited, update the [template](https://github.com/dev-academy-challenges/spork/blob/main/src/schedules/template.js).
 
-**NB: You don't have to learn this weird little language if you find a problem with your schedule, just hit [me](gerard.paapu@devacademy.co.nz) up and I will fix it. This is documented for the curious or masochistic.**
-
-The template is a function that takes one parameter `w` (I promise I'll eventually make this nicer), which has all the methods we use to build a schedule.
+The template is a function that takes one parameter `w` which has all the methods we use to build a schedule.
 
 - `w.schedule(...events)` takes any number of events and returns the schedule
 - `w.on(week, day, campusPattern, action)` creates an event
@@ -250,4 +227,12 @@ If you need to update the base template (so that your changes apply for all futu
 - Make your changes in a branch
 - Don't forget `npx prettier --write foldername`
 - Do `npm version patch` to increment the version number
-- Then make a PR and send it to Gerard to review
+- Then make a PR and tag someone for review
+
+# Checking out a local copy of the challenge
+
+You can get a local copy of a challenge to try out or for any other reason using `--make-local-clone` with the name of the challenge
+
+```sh
+spork --make-local-clone pupparazzi
+```
