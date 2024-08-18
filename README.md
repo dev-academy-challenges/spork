@@ -33,7 +33,7 @@ spork --init
 ```
 
 [Create a new Github Access Token](https://github.com/settings/tokens) with
-`repo` permissions (I call mine "spork") then add your `GITHUB_USER` and
+`repo, admin:org, workflow` permissions (I call mine "spork") then add your `GITHUB_USER` and
 `GITHUB_ACCESS_TOKEN` to the `~/.spork/env` file.
 
 ```sh
