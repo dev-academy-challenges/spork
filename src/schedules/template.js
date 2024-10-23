@@ -66,7 +66,7 @@ const template = (w) =>
       w.week(3),
       w.thu(),
       w.all(),
-      w.deploy('boilerplate-phase1, boilerplate-phase1-tw')
+      w.deploy('boilerplate-phase1', 'boilerplate-phase1-tw')
     ),
     w.on(
       w.week(4),
