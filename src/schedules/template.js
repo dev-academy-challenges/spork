@@ -85,7 +85,7 @@ const template = (w) =>
       w.week(4),
       w.wed(),
       w.online(),
-      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing'),
+      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing', 'ai-joker'),
     ),
     w.on(
       w.week(4),
@@ -104,7 +104,7 @@ const template = (w) =>
       w.all(),
       w.deploy('flight-club', 'database-diagram'),
     ),
-    w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest')),
+    w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest', 'movie-facts')),
     w.on(
       w.week(5),
       w.thu(),
