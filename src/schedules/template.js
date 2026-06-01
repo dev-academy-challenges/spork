@@ -56,6 +56,7 @@ const template = (w) =>
         'react-form-demo',
         'kata-react-forms',
         'boilerplate-react',
+        'boilerplate-react-tw-routing',
         'boilerplate-react-routing',
         'lightning-talks',
       ),
@@ -85,7 +86,11 @@ const template = (w) =>
       w.week(4),
       w.wed(),
       w.online(),
-      w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing', 'ai-joker'),
+      w.deploy(
+        'boilerplate-fullstack',
+        'boilerplate-fullstack-routing',
+        'ai-joker',
+      ),
     ),
     w.on(
       w.week(4),
@@ -102,9 +107,9 @@ const template = (w) =>
       w.week(5),
       w.tue(),
       w.all(),
-      w.deploy('flight-club', 'database-diagram'),
+      w.deploy('dreamfest', 'movie-facts', 'database-diagram'),
     ),
-    w.on(w.week(5), w.wed(), w.all(), w.deploy('dreamfest', 'movie-facts')),
+    w.on(w.week(5), w.wed(), w.all(), w.deploy('flight-club', 'ai-chatbot')),
     w.on(
       w.week(5),
       w.thu(),
@@ -113,7 +118,18 @@ const template = (w) =>
     ),
     w.on(w.week(6), w.mon(), w.all(), w.deploy('jwt-auth')),
     w.on(w.week(6), w.tue(), w.all(), w.deploy('todo-full-stack')),
-    w.on(w.week(6), w.thu(), w.all(), w.deploy('boilerplate-fullstack-auth')),
+    w.on(
+      w.week(6),
+      w.thu(),
+      w.all(),
+      w.deploy('boilerplate-fullstack-auth', 'ai-blog'),
+    ),
+    w.on(
+      w.week(7),
+      w.mon(),
+      w.all(),
+      w.deploy('ai-job-evaluator', 'supabase-local', 'diy-project'),
+    ),
   )
 
 export default template
