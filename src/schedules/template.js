@@ -85,8 +85,8 @@ const template = (w) =>
         'react-form-demo',
         'kata-react-forms',
         'boilerplate-react',
-        'boilerplate-react-tw-routing',
         'boilerplate-react-routing',
+        'fruit-stand-starter',
         'lightning-talks',
       ),
     ),
@@ -146,7 +146,12 @@ const template = (w) =>
       w.deploy('boilerplate-fullstack', 'boilerplate-fullstack-routing'),
     ),
     w.on(w.week(12), w.mon(), w.all(), w.deploy('jwt-auth')),
-    w.on(w.week(12), w.tue(), w.all(), w.deploy('todo-full-stack')),
+    w.on(
+      w.week(12),
+      w.tue(),
+      w.all(),
+      w.deploy('todo-full-stack', 'my-fullstack-collection'),
+    ),
     w.on(
       w.week(12),
       w.thu(),
